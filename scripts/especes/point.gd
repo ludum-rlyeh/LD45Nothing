@@ -5,30 +5,48 @@ extends Polygon2D
 # var b = "text"
 
 var RAND_SCALE = 1
-var LOOP_MAX = 20
+var LOOP_MAX = 100
 var LOOP_CURRENT = 0
-var DIRECTION_X = 1.0
-var DIRECTION_Y = 1.0
-var SPEED = 2.0
+var DIRECTION_X = randf()
+var DIRECTION_Y = randf()
+var DIRECTIONS = Vector2(DIRECTION_X,DIRECTION_Y).normalized()
+var SPEED_MAX = 5.0
+var BRAKE_RATIO = 2.0
+var BRAKE = SPEED_MAX / BRAKE_RATIO
+var ACCELERATE = (SPEED_MAX - BRAKE) / LOOP_MAX
+var SPEED = SPEED_MAX - BRAKE
+var ANGLE_SMOOTH = 0.0
+
+var TARGET = self.position
+var BEGIN = Vector2(0.0, 0.0)
+var DISTANCE_MIN = 50.0
+var DISTANCE_TARGET = 15.0
+var SPEEDS = Vector2(0.0,0.0)
+var DISTANCE_MAX = 20.0
+var SPEED_INTERPOLATION = 20.0
+
+
 
 var X_SIZE = 1024
 var Y_SIZE = 1024
 
 func out_of_bound() :
-	if (self.position.x < 0 && DIRECTION_X < 0.0) || (self.position.x > X_SIZE && DIRECTION_X > 0.0) :
-		DIRECTION_X *= -1
-	if (self.position.y < 0 && DIRECTION_Y < 0.0) || (self.position.y > Y_SIZE && DIRECTION_Y > 0.0) :
-		DIRECTION_Y *= -1
+	if (self.position.x < 0 && DIRECTIONS[0] < 0.0) || (self.position.x > X_SIZE && DIRECTIONS[0] > 0.0) :
+		DIRECTIONS[0] *= -1
+	if (self.position.y < 0 && DIRECTIONS[1] < 0.0) || (self.position.y > Y_SIZE && DIRECTIONS[1] > 0.0) :
+		DIRECTIONS[1] *= -1
+		
 
 func mouvement_1() :
 	out_of_bound()
 	if LOOP_CURRENT > LOOP_MAX :
 		LOOP_CURRENT = 0
-		DIRECTION_X = randf() * RAND_SCALE * pow(-1,(randi() % 2))
-		DIRECTION_Y = randf() * RAND_SCALE * pow(-1,(randi() % 2))
+		var dir_x = randf() * RAND_SCALE * pow(-1,(randi() % 2))
+		var dir_y = randf() * RAND_SCALE * pow(-1,(randi() % 2))
+		DIRECTIONS = Vector2(dir_x,dir_y)
 
-	self.move_local_x(DIRECTION_X)
-	self.move_local_y(DIRECTION_Y)
+	self.move_local_x(DIRECTIONS[0])
+	self.move_local_y(DIRECTIONS[1])
 	
 	LOOP_CURRENT += 1
 	
@@ -39,42 +57,107 @@ func mouvement_2() :
 		var dir_x = randf() *  pow(-1,(randi() % 2))
 		var dir_y = randf() *  pow(-1,(randi() % 2))
 		var speed = sqrt(pow(dir_x,2) + pow(dir_y,2))
-		DIRECTION_X = dir_x * (SPEED/speed)
-		DIRECTION_Y = dir_y * (SPEED/speed)
+		DIRECTIONS[0] = dir_x * (SPEED/speed)
+		DIRECTIONS[1] = dir_y * (SPEED/speed)
 		
 		
 
-	self.move_local_x(DIRECTION_X)
-	self.move_local_y(DIRECTION_Y)
+	self.move_local_x(DIRECTIONS[0])
+	self.move_local_y(DIRECTIONS[1])
 	
 	LOOP_CURRENT += 1
+	
+	
+func draw_directions_smooth() :
+	var dir_x = randf() *  pow(-1,(randi() % 2))
+	var dir_y = randf() *  pow(-1,(randi() % 2))
+		
+	while(Vector2(dir_x,dir_y).dot(Vector2(DIRECTIONS[0],DIRECTIONS[1])) < ANGLE_SMOOTH) :
+		dir_x = randf() *  pow(-1,(randi() % 2))
+		dir_y = randf() *  pow(-1,(randi() % 2))
+
+	return Vector2(dir_x, dir_y).normalized()
+
+
+func mouvement_3() :
+	out_of_bound()
+	if SPEED <= (SPEED_MAX - ACCELERATE) :
+		SPEED += ACCELERATE
+	
+	DIRECTIONS = DIRECTIONS.normalized() * SPEED
+	
+	if LOOP_CURRENT > LOOP_MAX :
+		LOOP_CURRENT = 0
+		SPEED = SPEED - BRAKE 
+		var dirs = draw_directions_smooth()
+	
+		DIRECTIONS = dirs * SPEED 
+		
+		
+
+	self.move_local_x(DIRECTIONS[0])
+	self.move_local_y(DIRECTIONS[1])
+	
+	LOOP_CURRENT += 1
+	
+	
+func out_of_bound_target() :
+	if ((TARGET[0] + DIRECTIONS[0]) < 0) :
+		TARGET[0] = 0
+	if ((TARGET[0] + DIRECTIONS[0]) > X_SIZE) :
+		TARGET[0] = X_SIZE
+	
+	if ((TARGET[1] + DIRECTIONS[0]) < 0) :
+		TARGET[1] = 0
+	if ((TARGET[1] + DIRECTIONS[1]) > Y_SIZE) :
+		TARGET[1] = Y_SIZE
+	
+	
+func mouvement_4(delta):
+	
+	var dir_x = randf() *  pow(-1,(randi() % 2))
+	var dir_y = randf() *  pow(-1,(randi() % 2))
+	var dirs = Vector2(dir_x,dir_y).normalized() * DISTANCE_TARGET
+		
+	TARGET += dirs
+	out_of_bound_target()
+	
+	self.position = self.position.linear_interpolate(TARGET, delta*SPEED_MAX)
+
+
+func mouvement_5(delta):
+	DIRECTIONS = Vector2(randf() * pow(-1,randi()%2), randf() * pow(-1,randi()%2))
+	TARGET += DIRECTIONS.normalized() * DISTANCE_TARGET
+	out_of_bound_target()
+	
+	self.position = self.position.linear_interpolate(TARGET, delta * 0.5)
+	
+	pass
+	
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
-	build()
 	
-	X_SIZE = get_viewport().size.x
-	Y_SIZE = get_viewport().size.y
-	pass # Replace with function body.
+#	X_SIZE = get_viewport().size.x
+#	Y_SIZE = get_viewport().size.y
+	
+	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
 
-func build() :
-	print(len(self.polygon))
+func build(var points) :
 	
-	var poly = [Vector2(0,0), Vector2(5,0), Vector2(2.5,5)]
-	print(self.polygon)
+	position = points[0]
+	var poly  = [Vector2(0,0), Vector2(5,0), Vector2(2.5,5)]
 	self.set_polygon(poly)
-	print(self.polygon)
-	
-	pass
 
 func _process(delta) :
 	
 #	mouvement_1()
-	mouvement_2()
-	
-	
+#	mouvement_2()
+#	mouvement_3()
+#	mouvement_4(delta)
+	mouvement_5(delta)
 	
