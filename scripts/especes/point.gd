@@ -100,8 +100,6 @@ func mouvement_3() :
 	
 	LOOP_CURRENT += 1
 	
-	pass
-	
 	
 func out_of_bound_target() :
 	if ((TARGET[0] + DIRECTIONS[0]) < 0) :
@@ -131,7 +129,6 @@ func mouvement_5(delta):
 	DIRECTIONS = Vector2(randf() * pow(-1,randi()%2), randf() * pow(-1,randi()%2))
 	TARGET += DIRECTIONS.normalized() * DISTANCE_TARGET
 	out_of_bound_target()
-	print(DIRECTIONS)
 	
 	self.position = self.position.linear_interpolate(TARGET, delta * 0.5)
 	
@@ -140,11 +137,9 @@ func mouvement_5(delta):
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
-	build()
 	
-	X_SIZE = get_viewport().size.x
-	Y_SIZE = get_viewport().size.y
-	pass # Replace with function body.
+#	X_SIZE = get_viewport().size.x
+#	Y_SIZE = get_viewport().size.y
 	
 	
 
@@ -152,20 +147,17 @@ func _ready():
 #func _process(delta):
 #	pass
 
-func build() :
+func build(var points) :
 	
-	var poly = [Vector2(0,0), Vector2(5,0), Vector2(2.5,5)]
-	print(self.polygon)
+	position = points[0]
+	var poly  = [Vector2(0,0), Vector2(5,0), Vector2(2.5,5)]
 	self.set_polygon(poly)
-	print(self.polygon)
-	
-	pass
 
 func _process(delta) :
 	
 #	mouvement_1()
-	#mouvement_2()
-	mouvement_3()
-	#mouvement_4(delta)
-	#mouvement_5(delta)
+#	mouvement_2()
+#	mouvement_3()
+#	mouvement_4(delta)
+	mouvement_5(delta)
 	

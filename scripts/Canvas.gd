@@ -16,17 +16,19 @@ func _on_new_shape(var line2d):
 
 func recognition(var line2d):
 	var points = Utils.remove_duplicates(line2d.points)
-	print_debug(points)
+	var boid_type = null;
 	
 	if start_and_end_are_close(points, 20) :
 		if not_a_lot_of_points(points, 10) :
-			print_debug("It's a point !") 
+			boid_type = "point";
 		else :
-			print_debug("It's a circle !")
+			boid_type = "circle";
 	elif in_box(points, 0.9) :
-		print_debug("It's a line !")
+		boid_type = "line";
 	else :
-		print_debug("I don't what it is !")
+		boid_type = "snake";
+	
+	emit_signal("_new_boid_sig", boid_type, line2d)
 	
 
 func start_and_end_are_close(var points, var max_dist) :
@@ -53,7 +55,6 @@ func in_box(var points, var min_dot) :
 		if point != begin and point != end :
 			var v2 = point - begin
 			var dot = v_norm.dot(v2.normalized())
-			print_debug(v, ", ", v2, ", ", dot, ", ", min_dot)
 			if dot < min_dot :
 				return false
 	
