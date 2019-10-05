@@ -149,8 +149,7 @@ func _ready():
 
 func build(var points) :
 	
-	position = points[0]
-	var poly  = [Vector2(0,0), Vector2(5,0), Vector2(2.5,5)]
+	var poly = [Vector2(0,0), Vector2(5,0), Vector2(2.5,5)]
 	self.set_polygon(poly)
 
 func _process(delta) :

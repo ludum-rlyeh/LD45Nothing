@@ -9,9 +9,18 @@ func _on_new_boid(var boid_type, var line2d):
 	
 
 func add_boid(var boid_type, var line2d):
-	if boid_type == "point" :
-		var point = preload("res://scenes/especes/point.tscn").instance()
-		point.build(line2d.points)
-		add_child(point)
+	var boid = null
+	
+	match boid_type :
+		"point":
+			boid = preload("res://scenes/especes/point.tscn").instance()
+		"line":
+			boid = preload("res://scenes/especes/bascule.tscn").instance()
+		"circle":
+			boid = preload("res://scenes/especes/Boid.tscn").instance()
+		
+	if boid != null :
+		boid.build(line2d.points)
+		add_child(boid)
 	
 	line2d.queue_free()
