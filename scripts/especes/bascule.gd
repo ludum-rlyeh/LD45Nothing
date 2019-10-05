@@ -1,46 +1,82 @@
-extends Node2D
+extends Polygon2D
 
-var MIN_ANGLE = 20
-var MAX_ANGLE = 250
+var MIN_ANGLE = 90
+var MAX_ANGLE = 120
 
-var origin : Vector2
-var vec_line : Vector2
+var origin = Vector2.ZERO
 var length
 var cumulate_angle = 0
 var total_angle
-var SPEED_ANGLE = 10
+var SPEED_ANGLE = 60
+
+var init_vec_line
+
+var THICK = 5
+
+var flip = false
+
+var direction = 1
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
-	build([50,0])
-
-	pass # Replace with function body.
+#	var line = Line2D.new()
+#	line.set_points([Vector2(50,200), Vector2(200,200)])
+#	build(line.points)
 	
 func _process(delta):
 	move(delta)
+	pass
 
 func build(shape):
-	origin = shape[0]
-	vec_line = shape[1] - origin
-	length = vec_line.length()
+	init_vec_line = shape.last() - shape.first()
+	length = init_vec_line.length()
 	total_angle = new_angle()
 	
-	var points = [origin + Vector2(0, 10), origin - Vector2(0, 10), origin + vec_line + Vector2(0, -10), origin + vec_line + Vector2(0, 10)]
-#	self.set_polygon(points)
+	var points = [Vector2(0, -THICK), Vector2(0, THICK), init_vec_line + Vector2(0, THICK), init_vec_line + Vector2(0, -THICK)]
+#	self.direction = points[points.size() - 1] - points[0]
+	self.set_polygon(points)
 	
 func move(delta):
-	var angle = total_angle * delta
-	self.rotate(min(angle, abs(total_angle - cumulate_angle)))
-	cumulate_angle += angle
 	
+	var angleInDeg = direction * SPEED_ANGLE * delta
 	
-	if (cumulate_angle > total_angle):
+	if ((direction == -1 && cumulate_angle + angleInDeg < total_angle) || (direction == 1 && cumulate_angle + angleInDeg > total_angle)):
+		direction = random_direction()
+		total_angle = direction * new_angle()
+		flip = !flip
 		cumulate_angle = 0
-		total_angle = new_angle()
+		
+	else:
+		cumulate_angle += angleInDeg
+		
+	var glob_pos = global_position
+	var angleInRad = deg2rad(angleInDeg)
+	var T
+	if(!flip):
+		T = -glob_pos
+	else:
+		var trans = init_vec_line.rotated(get_transform().get_rotation())
+		T = -glob_pos -trans
+	
+	translate(T)
+	
+	var transform = get_global_transform().rotated(angleInRad)
+	set_global_transform(transform)
+	
+	translate(-T)
+	
 		
 func random_angle_between(minVal, maxVal):
-	rand_range(minVal , maxVal)
+	return rand_range(minVal , maxVal)
 	
 func new_angle():
 	return random_angle_between(MIN_ANGLE, MAX_ANGLE)
+	
+func random_direction():
+	var n = randi() % 2
+	
+	print ("n : " , n)
+	if n == 1:
+		return -1
+	return 1

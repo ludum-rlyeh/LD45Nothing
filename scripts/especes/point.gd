@@ -73,8 +73,8 @@ func build() :
 
 func _process(delta) :
 	
-	mouvement_1()
-	#mouvement_2()
+#	mouvement_1()
+	mouvement_2()
 	
 	
 	
