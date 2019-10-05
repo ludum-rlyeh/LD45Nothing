@@ -29,7 +29,7 @@ func _process(delta):
 	pass
 
 func build(shape):
-	init_vec_line = shape.last() - shape.first()
+	init_vec_line = shape[shape.size()-1] - shape[0]
 	length = init_vec_line.length()
 	total_angle = new_angle()
 	
@@ -75,8 +75,6 @@ func new_angle():
 	
 func random_direction():
 	var n = randi() % 2
-	
-	print ("n : " , n)
 	if n == 1:
 		return -1
 	return 1
