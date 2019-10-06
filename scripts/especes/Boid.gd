@@ -1,5 +1,12 @@
 extends Node2D
 
+var samples = [
+	"res://assets/sounds/shamisenD.ogg",
+	"res://assets/sounds/shamisenDontKnow.ogg",
+	"res://assets/sounds/shamisenEm.ogg",
+	"res://assets/sounds/shamisenG.ogg"
+]
+
 var MAX_VELOCITY = 20.0
 var velocity = Vector2(0.0, 0.0)
 
@@ -10,6 +17,10 @@ var separation_dist = 100
 func _ready():
 	randomize()
 	self.add_to_group("boids")
+	
+	# set ramdom sound
+	var sample = samples[randi() % samples.size()]
+	$Audio.stream = load(sample)
 
 func build(var points):
 	

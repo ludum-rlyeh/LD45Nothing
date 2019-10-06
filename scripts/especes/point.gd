@@ -4,6 +4,8 @@ extends Polygon2D
 # var a = 2
 # var b = "text"
 
+signal die_sig
+
 var RAND_SCALE = 1
 var LOOP_MAX = 100
 var LOOP_CURRENT = 0
@@ -180,3 +182,7 @@ func _process(delta) :
 	if Utils.out_of_viewport(self) == 1 :
 		TARGET = self.position
 	pass
+
+func die():
+	set_process(false)
+	emit_signal("die_sig")

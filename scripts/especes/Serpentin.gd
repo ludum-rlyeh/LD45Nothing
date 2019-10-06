@@ -114,8 +114,9 @@ func _process(delta):
 
 	for p in points_node :
 		dist = self.points[-1].distance_to(p.position)
-#		if dist < DISTANCE_EAT :
-			
+		if dist < DISTANCE_EAT :
+			print("die")
+			p.die()
 		if dist < DISTANCE_ATTRACTION :
 			if dist < distance_min_to_point :
 				distance_min_to_point = dist
@@ -124,7 +125,6 @@ func _process(delta):
 	
 	var attraction = Vector2(0.0,0.0)
 	if distance_min_to_point < DISTANCE_ATTRACTION :
-		print("attraction")
 		attraction = (nearest_point.position - POINTS[-1]).normalized()
 	
 	
