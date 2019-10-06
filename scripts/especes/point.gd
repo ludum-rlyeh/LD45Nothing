@@ -1,4 +1,4 @@
-extends Polygon2D
+extends Sprite
 
 var samples = [
 	"res://assets/sounds/drum01.ogg",
@@ -166,21 +166,24 @@ func _ready():
 	var sample = samples[randi() % samples.size()]
 	$Audio.stream = load(sample)
 	
+	set_process(false)
+	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
 
 func build(var points) :
+#	var poly = [Vector2(0,0), Vector2(5,0), Vector2(2.5,5)]
 	
-	var box = Utils.getBBox(points)
-	self.position = box.position
-	var poly = [Vector2(0,0), Vector2(5,0), Vector2(2.5,5)]
-	
-	POINTS = poly
+#	POINTS = poly
 	TARGET = self.position
 
-	self.set_polygon(POINTS)
+#	self.set_polygon(POINTS)
+
+
+
+
 	
 
 func _process(delta) :
