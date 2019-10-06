@@ -13,9 +13,7 @@ func _ready():
 
 func build(var points):
 	
-	var rect = Rect2(points[0], Vector2(0.0,0.0))
-	for point in points:
-		rect = rect.expand(point)
+	var rect = Utils.getBBox(points)
 	
 	self.position = rect.position
 	

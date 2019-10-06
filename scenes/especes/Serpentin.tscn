@@ -1,10 +1,32 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://scripts/especes/Serpentin.gd" type="Script" id=1]
 
+[sub_resource type="GDScript" id=1]
+resource_name = "Serpentin"
+script/source = "extends Node2D
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+func build(var points):
+	$Line2D.build(points)
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+"
+
 [node name="Node2D" type="Node2D"]
+script = SubResource( 1 )
 
 [node name="Line2D" type="Line2D" parent="."]
+points = PoolVector2Array( 324, 14 )
 texture_mode = 53
 joint_mode = 2
 begin_cap_mode = 2

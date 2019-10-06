@@ -16,7 +16,13 @@ var THRESHOLD_ANGLE_SAME_SLOPE = 0.9
 #	print(detectEdge(0, points))
 #	print(detectEdge(3, points))
 	
-#	print(splitByEdges(points))
+
+func getBBox(points):
+	var rect = Rect2(points[0], Vector2(0.0,0.0))
+	for point in points:
+		rect = rect.expand(point)
+	return rect
+	
 	
 
 # return a copy of a given array without duplicates
