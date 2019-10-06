@@ -4,7 +4,9 @@ var POINTS
 var LOOP = 0
 var TIME = 0
 var DIRECTION = Vector2(randf() * pow(-1,randi()%2),randf() * pow(-1,randi()%2)).normalized()
-var NUMBER_SLOOPS = 6
+var NUMBER_SLOOPS = 2
+var DISTANCE = 1
+var AMPLITUDE = 3.0
 
 func mouv():
 	POINTS.append(POINTS[-1]+Vector2(15.0,0))
@@ -52,15 +54,51 @@ func mouvement_3(delta) :
 		DIRECTION = new_direction
 	
 	
-	var new_offset = Vector2(DIRECTION[1] * -1.0, DIRECTION[0]) * sin(TIME*NUMBER_SLOOPS)  + DIRECTION
+	var new_offset = (Vector2(DIRECTION[1] * -1.0, DIRECTION[0]) * sin(TIME*NUMBER_SLOOPS) * AMPLITUDE + DIRECTION)
 	
 
 	POINTS.remove(0)
-	POINTS.append(POINTS[-1] + new_offset * 1)
+	POINTS.append(POINTS[-1] + (new_offset * DISTANCE/AMPLITUDE))
 	self.set_points(POINTS)
 
 func build(points) :
-	POINTS = points
+#	POINTS = points
+	POINTS = []
+	POINTS.append(points[0])
+	var distance = 0.0
+	var direction
+	for i in range(0,points.size() - 1) :
+		distance = points[i].distance_to(points[i+1])
+		distance = int(distance)
+		direction = (points[i+1] - points[i]).normalized() * DISTANCE
+		for d in range(0,distance) :
+			#POINTS.append(points[-1])
+			POINTS.append(POINTS[-1] + direction)
+		POINTS.append(points[i+1])
+	
+	
+	self.set_points(POINTS)
+#	OLD_POSITION = self.points[-1]
+	
+	pass
+
+func build_2(points): 
+	POINTS = []
+	POINTS.append(points[0])
+	var distance = 0.0
+	var direction
+	for i in range(0,points.size() - 1) :
+		distance = points[i].distance_to(points[i+1])
+		distance = int(distance)
+		direction = (points[i+1] - points[i]).normalized() * DISTANCE
+		for d in range(0,distance) :
+			#POINTS.append(points[-1])
+			POINTS.append(POINTS[-1] + direction)
+		POINTS.append(points[i+1])
+	
+	print(POINTS)
+	
+	self.set_points(POINTS)
 #	OLD_POSITION = self.points[-1]
 	
 	pass
@@ -68,14 +106,14 @@ func build(points) :
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
-	var points = PoolVector2Array([Vector2(100.0,100.0), Vector2(130.0,100.0), Vector2(145.0,100.0), Vector2(160.0,100.0), Vector2(175.0,100.0), Vector2(190.0,100.0)])
-	var array = []
-	for i in range(0,200) :
-		array.append(Vector2(i*1.0,300.0))
-	points = PoolVector2Array(array)
-	self.set_points(points)
-	
-	build(points)
+#	var points = PoolVector2Array([Vector2(100.0,100.0), Vector2(130.0,100.0), Vector2(145.0,100.0), Vector2(160.0,100.0), Vector2(175.0,100.0), Vector2(190.0,100.0)])
+#	var array = []
+#	for i in range(0,200) :
+#		array.append(Vector2(i*1.0,300.0))
+#	points = PoolVector2Array(array)
+#	self.set_points(points)
+#
+#	build(points)
 	
 	
 	pass # Replace with function body.

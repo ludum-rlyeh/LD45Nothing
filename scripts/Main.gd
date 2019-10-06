@@ -19,6 +19,8 @@ func add_boid(var boid_type, var line2d):
 			boid = preload("res://scenes/especes/bascule.tscn").instance()
 		"circle":
 			boid = preload("res://scenes/especes/Boid.tscn").instance()
+		"snake":
+			boid = preload("res://scenes/especes/Serpentin.tscn").instance()
 		
 	if boid != null :
 		boid.build(line2d.points)
