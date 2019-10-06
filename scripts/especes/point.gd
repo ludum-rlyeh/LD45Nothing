@@ -41,6 +41,9 @@ var OLD_POSITIONS = []
 
 var POINTS = []
 
+var OLD_POINT
+var TIME = 0
+
 
 
 var X_SIZE = 1024
@@ -149,9 +152,21 @@ func mouvement_5(delta):
 	
 	pass
 	
-func mouvement_6() :
+func mouvement_6(delta) :
+	var direction = (self.position - OLD_POINT).normalized()
+	print(direction)
 	
-	pass
+	if TIME > PI/(4.0 * (randf()+0.2)):
+		
+		var new_direction = Vector2(randf() * pow(-1,randi()%2), randf() * pow(-1,randi()%2)).normalized()
+		while (abs(new_direction.angle_to(direction)) > 2.0) :
+			new_direction = Vector2(randf() * pow(-1,randi()%2), randf() * pow(-1,randi()%2)).normalized()
+		direction = new_direction
+		TIME = 0.0
+	
+	OLD_POINT = self.position
+	self.set_position(self.position + direction * 1)
+	TIME += delta
 	
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -177,6 +192,7 @@ func build(var points) :
 #	var poly = [Vector2(0,0), Vector2(5,0), Vector2(2.5,5)]
 	
 #	POINTS = poly
+	OLD_POINT = self.position - Vector2(randf() * pow(-1,randi()%2),randf() * pow(-1,randi()%2)).normalized()
 	TARGET = self.position
 
 #	self.set_polygon(POINTS)
@@ -192,8 +208,8 @@ func _process(delta) :
 #	mouvement_3()
 #	mouvement_4(delta)
 	#mouvement_5(delta)
-	mouvement_5(delta)
-	
+	#mouvement_5(delta)
+	mouvement_6(delta)
 	if Utils.out_of_viewport(self) == 1 :
 		TARGET = self.position
 	pass
