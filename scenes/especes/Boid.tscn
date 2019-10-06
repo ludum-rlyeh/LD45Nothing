@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://scripts/especes/Boid.gd" type="Script" id=1]
-[ext_resource path="res://assets/sounds/shamisen01.ogg" type="AudioStream" id=2]
+[ext_resource path="res://assets/sounds/shamisenD.ogg" type="AudioStream" id=2]
 
 [node name="Boid" type="Node2D"]
 script = ExtResource( 1 )
