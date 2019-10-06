@@ -176,4 +176,7 @@ func _process(delta) :
 #	mouvement_4(delta)
 	#mouvement_5(delta)
 	mouvement_5(delta)
+	
+	if Utils.out_of_viewport(self) == 1 :
+		TARGET = self.position
 	pass
