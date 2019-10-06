@@ -7,6 +7,7 @@
 audio_stream = ExtResource( 2 )
 
 [node name="Pencil" type="Line2D"]
+default_color = Color( 0, 0, 0, 1 )
 texture_mode = 104275201
 script = ExtResource( 1 )
 
