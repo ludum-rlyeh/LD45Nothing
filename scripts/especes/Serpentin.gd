@@ -115,7 +115,6 @@ func _process(delta):
 	for p in points_node :
 		dist = self.points[-1].distance_to(p.position)
 		if dist < DISTANCE_EAT :
-			print("die")
 			p.die()
 		if dist < DISTANCE_ATTRACTION :
 			if dist < distance_min_to_point :

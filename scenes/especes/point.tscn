@@ -8,10 +8,16 @@ script/source = "extends Node2D
 
 
 func _ready():
-	pass
+	$Polygon2D.connect(\"die_sig\", self, \"_on_die\")
 
 func build(var points):
 	$Polygon2D.build(points)
+
+func _on_die():
+	call_deferred(\"die\")
+
+func die():
+	self.queue_free()
 "
 
 [node name="Node2D" type="Node2D"]

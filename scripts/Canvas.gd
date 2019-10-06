@@ -22,10 +22,10 @@ func recognition(var line2d):
 		if start_and_end_are_close(points, 20) :
 			if not_a_lot_of_points(points, 10) :
 				boid_type = "point";
-	#		elif has_edges(points, 3)  :
-	#			boid_type = "triangle"
-	#		elif has_edges(points, 4):
-	#			boid_type = "square"
+			elif has_edges(points, 3)  :
+				boid_type = "triangle"
+			elif has_edges(points, 4):
+				boid_type = "square"
 			else:
 				boid_type = "circle";
 		elif in_box(points, 0.9) :
