@@ -7,9 +7,9 @@ extends Polygon2D
 var RAND_SCALE = 1
 var LOOP_MAX = 100
 var LOOP_CURRENT = 0
-var DIRECTION_X = randf()
-var DIRECTION_Y = randf()
-var DIRECTIONS = Vector2(DIRECTION_X,DIRECTION_Y).normalized()
+var DIRECTION_X
+var DIRECTION_Y
+var DIRECTIONS
 var SPEED_MAX = 5.0
 var BRAKE_RATIO = 2.0
 var BRAKE = SPEED_MAX / BRAKE_RATIO
@@ -24,6 +24,10 @@ var DISTANCE_TARGET = 15.0
 var SPEEDS = Vector2(0.0,0.0)
 var DISTANCE_MAX = 20.0
 var SPEED_INTERPOLATION = 20.0
+
+var OLD_POSITIONS = []
+
+var POINTS = []
 
 
 
@@ -128,16 +132,21 @@ func mouvement_4(delta):
 func mouvement_5(delta):
 	DIRECTIONS = Vector2(randf() * pow(-1,randi()%2), randf() * pow(-1,randi()%2))
 	TARGET += DIRECTIONS.normalized() * DISTANCE_TARGET
-	out_of_bound_target()
 	
 	self.position = self.position.linear_interpolate(TARGET, delta * 0.5)
+	
+	pass
+	
+func mouvement_6() :
 	
 	pass
 	
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
-	
+	DIRECTION_X = randf() * pow(-1,randi()%2)
+	DIRECTION_Y = randf() * pow(-1,randi()%2)
+	DIRECTIONS = Vector2(DIRECTION_X,DIRECTION_Y).normalized()
 #	X_SIZE = get_viewport().size.x
 #	Y_SIZE = get_viewport().size.y
 	
@@ -149,8 +158,15 @@ func _ready():
 
 func build(var points) :
 	
-	var poly = [Vector2(0,0), Vector2(5,0), Vector2(2.5,5)]
-	self.set_polygon(poly)
+#	var poly = [Vector2(0,0), Vector2(5,0), Vector2(2.5,5)]
+	if len(points) == 1 :
+		points.append(points[0]+Vector2(3.0,0.0))
+		points.append(points[0]+Vector2(1.5,1.5))
+	print(points)
+	POINTS = points
+
+	self.set_polygon(POINTS)
+	
 
 func _process(delta) :
 	
@@ -158,5 +174,5 @@ func _process(delta) :
 #	mouvement_2()
 #	mouvement_3()
 #	mouvement_4(delta)
+	#mouvement_5(delta)
 	mouvement_5(delta)
-	
