@@ -1,5 +1,15 @@
 extends Line2D
 
+var samples = [
+	"res://assets/sounds/shakuhachi01.ogg",
+	"res://assets/sounds/shakuhachi02.ogg",
+	"res://assets/sounds/shakuhachi03.ogg",
+	"res://assets/sounds/shakuhachi04.ogg",
+	"res://assets/sounds/shakuhachi05.ogg",
+	"res://assets/sounds/shakuhachi06.ogg",
+	"res://assets/sounds/shakuhachi07.ogg"
+]
+
 var POINTS
 var LOOP = 0
 var TIME = 0
@@ -87,12 +97,15 @@ func build(points) :
 	self.set_points(POINTS)
 #	OLD_POSITION = self.points[-1]
 	
-	pass
+	$AudioNode.position = self.points[-1]
+	var sample = samples[randi()%samples.size()]
+	$AudioNode/Audio.stream = load(sample)
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
+	
 #	var points = PoolVector2Array([Vector2(100.0,100.0), Vector2(130.0,100.0), Vector2(145.0,100.0), Vector2(160.0,100.0), Vector2(175.0,100.0), Vector2(190.0,100.0)])
 #	var array = []
 #	for i in range(0,200) :
@@ -129,5 +142,6 @@ func _process(delta):
 	
 	#mouvement_2(delta)
 	mouvement_3(delta, attraction)
+	$AudioNode.position = self.points[-1]
+
 	#mouv()
-	pass
