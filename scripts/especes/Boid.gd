@@ -76,3 +76,4 @@ func limit_velocity(var velocity) :
 	if velocity.length() > MAX_VELOCITY :
 		velocity = (velocity / velocity.length()) * MAX_VELOCITY 
 	return velocity
+
