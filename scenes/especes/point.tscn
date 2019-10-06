@@ -12,13 +12,6 @@ func _ready():
 
 func build(var points):
 	$Polygon2D.build(points)
-	$Polygon2D.connect(\"die_sig\", self, \"_on_die\")
-	
-func _on_die():
-	call_deferred(\"die\")
-	
-func die():
-	self.queue_free()
 "
 
 [node name="Node2D" type="Node2D"]

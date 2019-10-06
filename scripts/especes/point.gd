@@ -156,6 +156,7 @@ func mouvement_6() :
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
+	self.add_to_group("points")
 	DIRECTION_X = randf() * pow(-1,randi()%2)
 	DIRECTION_Y = randf() * pow(-1,randi()%2)
 	DIRECTIONS = Vector2(DIRECTION_X,DIRECTION_Y).normalized()
@@ -183,13 +184,16 @@ func build(var points) :
 	
 
 func _process(delta) :
-	
 #	mouvement_1()
 #	mouvement_2()
 #	mouvement_3()
 #	mouvement_4(delta)
 	#mouvement_5(delta)
 	mouvement_5(delta)
+	
+	if Utils.out_of_viewport(self) == 1 :
+		TARGET = self.position
+	pass
 
 func die():
 	set_process(false)
