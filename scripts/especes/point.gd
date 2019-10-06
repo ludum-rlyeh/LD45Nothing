@@ -1,5 +1,15 @@
 extends Polygon2D
 
+var samples = [
+	"res://assets/sounds/drum01.ogg",
+	"res://assets/sounds/drum02.ogg",
+	"res://assets/sounds/drum03.ogg",
+	"res://assets/sounds/drum04.ogg",
+	"res://assets/sounds/drum05.ogg",
+	"res://assets/sounds/drum06.ogg",
+	"res://assets/sounds/drum07.ogg"
+]
+
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
@@ -152,6 +162,8 @@ func _ready():
 #	X_SIZE = get_viewport().size.x
 #	Y_SIZE = get_viewport().size.y
 	
+	var sample = samples[randi() % samples.size()]
+	$Audio.stream = load(sample)
 	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
