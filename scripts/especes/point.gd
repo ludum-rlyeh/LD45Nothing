@@ -134,6 +134,10 @@ func mouvement_5(delta):
 	
 	pass
 	
+func mouvement_6() :
+	
+	pass
+	
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
@@ -158,5 +162,5 @@ func _process(delta) :
 #	mouvement_2()
 #	mouvement_3()
 #	mouvement_4(delta)
-	mouvement_5(delta)
-	
+	#mouvement_5(delta)
+	mouvement_6()
