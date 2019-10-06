@@ -6,7 +6,9 @@ var TIME = 0
 var DIRECTION = Vector2(randf() * pow(-1,randi()%2),randf() * pow(-1,randi()%2)).normalized()
 var NUMBER_SLOOPS = 2
 var DISTANCE = 1
-var AMPLITUDE = 3.0
+var AMPLITUDE = 1.0
+
+var DISTANCE_ATTRACTION = 50.0
 
 func mouv():
 	POINTS.append(POINTS[-1]+Vector2(15.0,0))
@@ -120,7 +122,14 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	var distance_min_to_point = DISTANCE_ATTRACTION + 1.0
+	var points_node = get_tree().get_nodes_in_group("points")
+	for p in points_node :
+		print("point ", self.points[-1].distance_to(p.position), " ", self.points[-1], " ")
+		if self.points[-1].distance_to(p.position) < DISTANCE_ATTRACTION :
+			print("point ", self.points[-1].distance_to(p.position))
+	
 	#mouvement_2(delta)
-	mouvement_3(delta)
+	#mouvement_3(delta)
 	#mouv()
 	pass
