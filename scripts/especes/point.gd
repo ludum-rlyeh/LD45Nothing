@@ -17,7 +17,7 @@ var ACCELERATE = (SPEED_MAX - BRAKE) / LOOP_MAX
 var SPEED = SPEED_MAX - BRAKE
 var ANGLE_SMOOTH = 0.0
 
-var TARGET = self.position
+var TARGET
 var BEGIN = Vector2(0.0, 0.0)
 var DISTANCE_MIN = 50.0
 var DISTANCE_TARGET = 15.0
@@ -159,12 +159,12 @@ func _ready():
 
 func build(var points) :
 	
-#	var poly = [Vector2(0,0), Vector2(5,0), Vector2(2.5,5)]
-	if len(points) == 1 :
-		points.append(points[0]+Vector2(3.0,0.0))
-		points.append(points[0]+Vector2(1.5,1.5))
-	print(points)
-	POINTS = points
+	var box = Utils.getBBox(points)
+	self.position = box.position
+	var poly = [Vector2(0,0), Vector2(5,0), Vector2(2.5,5)]
+	
+	POINTS = poly
+	TARGET = self.position
 
 	self.set_polygon(POINTS)
 	
