@@ -1,5 +1,10 @@
 extends Polygon2D
 
+var samples = [
+	"res://assets/sounds/bell01.wav",
+	"res://assets/sounds/bell02.wav"
+]
+
 var MIN_ANGLE = 90
 var MAX_ANGLE = 120
 
@@ -20,13 +25,16 @@ var direction = 1
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
+	var sample = samples[randi() % samples.size()]
+	$Audio.stream = AudioStreamRandomPitch.new()
+	$Audio.stream.set_audio_stream(load(sample))
+	$Audio.play()
 #	var line = Line2D.new()
 #	line.set_points([Vector2(50,200), Vector2(200,200)])
 #	build(line.points)
 	
 func _process(delta):
 	move(delta)
-	pass
 
 func build(shape):
 	init_vec_line = shape[shape.size()-1] - shape[0]
@@ -46,7 +54,7 @@ func move(delta):
 		total_angle = direction * new_angle()
 		flip = !flip
 		cumulate_angle = 0
-		
+		$Audio.play()
 	else:
 		cumulate_angle += angleInDeg
 		
