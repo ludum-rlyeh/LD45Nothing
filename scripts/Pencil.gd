@@ -11,5 +11,7 @@ func _process(delta):
 		emit_signal("_new_shape_sig", self)
 
 func _on_Timer_timeout():
-	add_point(get_global_mouse_position())
+	var point = get_global_mouse_position()
+	add_point(point)
+	$Audio.position = point
 	$Timer.start()
