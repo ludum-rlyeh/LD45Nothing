@@ -1,8 +1,20 @@
 extends Polygon2D
 
+var samples = [
+	"res://assets/sounds/drum01.ogg",
+	"res://assets/sounds/drum02.ogg",
+	"res://assets/sounds/drum03.ogg",
+	"res://assets/sounds/drum04.ogg",
+	"res://assets/sounds/drum05.ogg",
+	"res://assets/sounds/drum06.ogg",
+	"res://assets/sounds/drum07.ogg"
+]
+
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
+
+signal die_sig
 
 var RAND_SCALE = 1
 var LOOP_MAX = 100
@@ -17,7 +29,7 @@ var ACCELERATE = (SPEED_MAX - BRAKE) / LOOP_MAX
 var SPEED = SPEED_MAX - BRAKE
 var ANGLE_SMOOTH = 0.0
 
-var TARGET = self.position
+var TARGET
 var BEGIN = Vector2(0.0, 0.0)
 var DISTANCE_MIN = 50.0
 var DISTANCE_TARGET = 15.0
@@ -144,12 +156,15 @@ func mouvement_6() :
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
+	self.add_to_group("points")
 	DIRECTION_X = randf() * pow(-1,randi()%2)
 	DIRECTION_Y = randf() * pow(-1,randi()%2)
 	DIRECTIONS = Vector2(DIRECTION_X,DIRECTION_Y).normalized()
 #	X_SIZE = get_viewport().size.x
 #	Y_SIZE = get_viewport().size.y
 	
+	var sample = samples[randi() % samples.size()]
+	$Audio.stream = load(sample)
 	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -158,21 +173,28 @@ func _ready():
 
 func build(var points) :
 	
-#	var poly = [Vector2(0,0), Vector2(5,0), Vector2(2.5,5)]
-	if len(points) == 1 :
-		points.append(points[0]+Vector2(3.0,0.0))
-		points.append(points[0]+Vector2(1.5,1.5))
-	print(points)
-	POINTS = points
+	var box = Utils.getBBox(points)
+	self.position = box.position
+	var poly = [Vector2(0,0), Vector2(5,0), Vector2(2.5,5)]
+	
+	POINTS = poly
+	TARGET = self.position
 
 	self.set_polygon(POINTS)
 	
 
 func _process(delta) :
-	
 #	mouvement_1()
 #	mouvement_2()
 #	mouvement_3()
 #	mouvement_4(delta)
 	#mouvement_5(delta)
 	mouvement_5(delta)
+	
+	if Utils.out_of_viewport(self) == 1 :
+		TARGET = self.position
+	pass
+
+func die():
+	set_process(false)
+	emit_signal("die_sig")

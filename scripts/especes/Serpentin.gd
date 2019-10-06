@@ -6,7 +6,11 @@ var TIME = 0
 var DIRECTION = Vector2(randf() * pow(-1,randi()%2),randf() * pow(-1,randi()%2)).normalized()
 var NUMBER_SLOOPS = 2
 var DISTANCE = 1
-var AMPLITUDE = 3.0
+var AMPLITUDE = 1.0
+
+var DISTANCE_ATTRACTION = 50.0
+var TIME_ATTRACTION = 0.0
+var DISTANCE_EAT = 5.0
 
 func mouv():
 	POINTS.append(POINTS[-1]+Vector2(15.0,0))
@@ -42,7 +46,7 @@ func mouvement_2(delta) :
 	self.set_points(POINTS)
 	
 	
-func mouvement_3(delta) :
+func mouvement_3(delta, attraction) :
 	TIME += delta
 	if TIME > (PI) :
 		TIME = 0.0
@@ -52,6 +56,10 @@ func mouvement_3(delta) :
 		
 		DIRECTION = new_direction
 	
+	if attraction.length() > 0.0 && TIME_ATTRACTION > 0.50:
+		TIME_ATTRACTION = 0.0
+		DIRECTION = attraction
+	TIME_ATTRACTION += delta
 	
 	var new_offset = (Vector2(DIRECTION[1] * -1.0, DIRECTION[0]) * sin(TIME*NUMBER_SLOOPS) * AMPLITUDE + DIRECTION)
 	
@@ -81,26 +89,6 @@ func build(points) :
 	
 	pass
 
-func build_2(points): 
-	POINTS = []
-	POINTS.append(points[0])
-	var distance = 0.0
-	var direction
-	for i in range(0,points.size() - 1) :
-		distance = points[i].distance_to(points[i+1])
-		distance = int(distance)
-		direction = (points[i+1] - points[i]).normalized() * DISTANCE
-		for d in range(0,distance) :
-			#POINTS.append(points[-1])
-			POINTS.append(POINTS[-1] + direction)
-		POINTS.append(points[i+1])
-	
-	print(POINTS)
-	
-	self.set_points(POINTS)
-#	OLD_POSITION = self.points[-1]
-	
-	pass
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -119,7 +107,27 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	var distance_min_to_point = DISTANCE_ATTRACTION + 1.0
+	var nearest_point 
+	var points_node = get_tree().get_nodes_in_group("points")
+	var dist = DISTANCE_ATTRACTION + 1.0
+
+	for p in points_node :
+		dist = self.points[-1].distance_to(p.position)
+		if dist < DISTANCE_EAT :
+			p.die()
+		if dist < DISTANCE_ATTRACTION :
+			if dist < distance_min_to_point :
+				distance_min_to_point = dist
+				nearest_point = p
+		
+	
+	var attraction = Vector2(0.0,0.0)
+	if distance_min_to_point < DISTANCE_ATTRACTION :
+		attraction = (nearest_point.position - POINTS[-1]).normalized()
+	
+	
 	#mouvement_2(delta)
-	mouvement_3(delta)
+	mouvement_3(delta, attraction)
 	#mouv()
 	pass

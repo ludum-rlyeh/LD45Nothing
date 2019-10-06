@@ -16,7 +16,7 @@ var separation_dist = 100
 
 func _ready():
 	randomize()
-	self.add_to_group("boids")
+	self.add_to_group("square")
 	
 	# set ramdom sound
 	var sample = samples[randi() % samples.size()]
@@ -38,7 +38,7 @@ func build(var points):
 	velocity = Vector2(rand_range(-1.0,1.0), rand_range(-1.0,1.0))
 
 func _process(delta):
-	var boids = get_tree().get_nodes_in_group("boids")
+	var boids = get_tree().get_nodes_in_group("square")
 	
 	if boids.size() > 1 :
 		var attraction_vec2 = Vector2(0.0, 0.0)

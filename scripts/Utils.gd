@@ -132,10 +132,16 @@ func out_of_viewport(var boid):
 	
 	if boid.position.x < -viewport_size.x/4.0 :
 		boid.position.x = viewport_size.x + viewport_size.x/4.0
+		return 1
 	elif boid.position.x > viewport_size.x + viewport_size.x/4.0 :
 		boid.position.x = -viewport_size.x/4.0
+		return 1
 	
 	if boid.position.y < -viewport_size.y / 4.0 :
 		boid.position.y = viewport_size.y + viewport_size.y / 4.0
+		return 1
 	elif boid.position.y > viewport_size.y + viewport_size.y / 4.0:
 		boid.position.y = - viewport_size.y / 4.0
+		return 1
+	
+	return 0
