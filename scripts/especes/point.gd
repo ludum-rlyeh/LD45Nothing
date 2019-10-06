@@ -25,6 +25,8 @@ var SPEEDS = Vector2(0.0,0.0)
 var DISTANCE_MAX = 20.0
 var SPEED_INTERPOLATION = 20.0
 
+var OLD_POSITIONS = []
+
 
 
 var X_SIZE = 1024
@@ -155,6 +157,8 @@ func build(var points) :
 	
 	var poly = [Vector2(0,0), Vector2(5,0), Vector2(2.5,5)]
 	self.set_polygon(poly)
+	
+	OLD_POSITIONS = [self.position, self.position+Vector2(randf()]
 
 func _process(delta) :
 	
