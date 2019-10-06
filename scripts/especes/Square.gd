@@ -1,10 +1,10 @@
 extends Node2D
 
 var samples = [
-	"res://assets/sounds/shamisenD.ogg",
-	"res://assets/sounds/shamisenDontKnow.ogg",
-	"res://assets/sounds/shamisenEm.ogg",
-	"res://assets/sounds/shamisenG.ogg"
+	"res://assets/sounds/kotoD.ogg",
+	"res://assets/sounds/kotoDontKnow.ogg",
+	"res://assets/sounds/kotoEm.ogg",
+	"res://assets/sounds/kotoG.ogg"
 ]
 
 var MAX_VELOCITY = 20.0
