@@ -22,6 +22,8 @@ var flip = false
 
 var direction = 1
 
+var ORIGINS 
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
@@ -40,10 +42,15 @@ func build(shape):
 	init_vec_line = shape[shape.size()-1] - shape[0]
 	length = init_vec_line.length()
 	total_angle = new_angle()
+	var normal = Vector2(-1.0 * init_vec_line[1], init_vec_line[0]).normalized()
+	self.set_position(shape[0])
 	
-	var points = [Vector2(0, -THICK), Vector2(0, THICK), init_vec_line + Vector2(0, THICK), init_vec_line + Vector2(0, -THICK)]
+	var points = [Vector2(0, 0), Vector2(0, 0) + normal * 10.0, init_vec_line + Vector2(0, 0), init_vec_line + Vector2(0, 0) - 10.0 * normal]
 #	self.direction = points[points.size() - 1] - points[0]
+	#var points = [shape[0], shape[0] + normal * 5.0, shape[-1] + normal * 5.0,shape[-1]]
 	self.set_polygon(points)
+	
+	ORIGINS = [shape[0], shape[-1]]
 	
 func move(delta):
 	
