@@ -154,7 +154,6 @@ func mouvement_5(delta):
 	
 func mouvement_6(delta) :
 	var direction = (self.position - OLD_POINT).normalized()
-	print(direction)
 	
 	if TIME > PI/(4.0 * (randf()+0.2)):
 		
