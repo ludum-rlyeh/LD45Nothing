@@ -4,6 +4,8 @@ extends Polygon2D
 # var a = 2
 # var b = "text"
 
+signal die_sig
+
 var RAND_SCALE = 1
 var LOOP_MAX = 100
 var LOOP_CURRENT = 0
@@ -176,3 +178,7 @@ func _process(delta) :
 #	mouvement_4(delta)
 	#mouvement_5(delta)
 	mouvement_5(delta)
+
+func die():
+	set_process(false)
+	emit_signal("die_sig")
