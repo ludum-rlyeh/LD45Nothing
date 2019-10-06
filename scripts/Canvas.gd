@@ -21,7 +21,11 @@ func recognition(var line2d):
 	if start_and_end_are_close(points, 20) :
 		if not_a_lot_of_points(points, 10) :
 			boid_type = "point";
-		else :
+#		elif has_edges(points, 3)  :
+#			boid_type = "triangle"
+#		elif has_edges(points, 4):
+#			boid_type = "square"
+		else:
 			boid_type = "circle";
 	elif in_box(points, 0.9) :
 		boid_type = "line";
@@ -59,3 +63,10 @@ func in_box(var points, var min_dot) :
 				return false
 	
 	return true
+
+func has_edges(var points, var n_edges) :
+	var edges = Utils.splitByEdges(points, true)
+	if edges.size() == n_edges :
+		return true
+
+
