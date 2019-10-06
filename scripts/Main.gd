@@ -1,14 +1,20 @@
 extends Node2D
 
+var ABuffer = ViewportTexture.new()
+
 func _ready():
 	randomize()
 	$Canvas.connect("_new_boid_sig", self, "_on_new_boid")
+	
+	var viewport = get_viewport()
+	viewport.render_target_clear_mode = Viewport.CLEAR_MODE_NEVER
 
 func _on_new_boid(var boid_type, var line2d):
 	call_deferred("add_boid", boid_type, line2d)
 	
 
 func add_boid(var boid_type, var line2d):
+	
 	var boid = null
 	print_debug(boid_type)
 	
