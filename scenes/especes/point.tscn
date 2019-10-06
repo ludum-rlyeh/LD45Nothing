@@ -1,11 +1,11 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://assets/shape/round.png" type="Texture" id=1]
 [ext_resource path="res://scripts/especes/point.gd" type="Script" id=2]
-[ext_resource path="res://assets/shape/ink_drop.png" type="Texture" id=3]
+[ext_resource path="res://particles/trainee_encre.tscn" type="PackedScene" id=3]
 [ext_resource path="res://assets/sounds/drum01.ogg" type="AudioStream" id=4]
 
-[sub_resource type="GDScript" id=9]
+[sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
 
 var MASK_RADIUS_INIT = 0.1
@@ -55,7 +55,7 @@ func _on_die():
 func die():
 	self.queue_free()"
 
-[sub_resource type="Shader" id=12]
+[sub_resource type="Shader" id=2]
 code = "shader_type canvas_item;
 
 uniform float radius;
@@ -72,48 +72,22 @@ void fragment() {
     COLOR = colour;
 }"
 
-[sub_resource type="ShaderMaterial" id=13]
-shader = SubResource( 12 )
+[sub_resource type="ShaderMaterial" id=3]
+shader = SubResource( 2 )
 shader_param/radius = null
 
-[sub_resource type="StreamTexture" id=11]
+[sub_resource type="StreamTexture" id=4]
 flags = 4
 load_path = "res://.import/ink_drop2.png-88af4311e61235e7f0d9588dd7e5f946.stex"
 
-[sub_resource type="Gradient" id=4]
-colors = PoolColorArray( 0, 0, 0, 1, 1, 1, 1, 0 )
-
-[sub_resource type="GradientTexture" id=5]
-gradient = SubResource( 4 )
-
-[sub_resource type="Curve" id=6]
-max_value = 0.25
-_data = [ Vector2( 0.0174372, 0.1866 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.0326 ), 0.0, 0.0, 0, 0 ]
-
-[sub_resource type="CurveTexture" id=7]
-curve = SubResource( 6 )
-
-[sub_resource type="ParticlesMaterial" id=8]
-emission_shape = 1
-emission_sphere_radius = 17.35
-flag_disable_z = true
-gravity = Vector3( 0, 0, 0 )
-angular_velocity = 1.05
-orbit_velocity = 0.0
-orbit_velocity_random = 0.0
-scale = 0.01
-scale_random = 0.1
-scale_curve = SubResource( 7 )
-color_ramp = SubResource( 5 )
-
 [node name="Node2D" type="Node2D"]
-script = SubResource( 9 )
+script = SubResource( 1 )
 
 [node name="Drop" type="Sprite" parent="."]
-material = SubResource( 13 )
+material = SubResource( 3 )
 position = Vector2( -6.85899, 9.43112 )
 scale = Vector2( 0.1, 0.1 )
-texture = SubResource( 11 )
+texture = SubResource( 4 )
 
 [node name="Shape" type="Sprite" parent="."]
 visible = false
@@ -122,14 +96,7 @@ scale = Vector2( 0.3, 0.3 )
 texture = ExtResource( 1 )
 script = ExtResource( 2 )
 
-[node name="Particles2D" type="Particles2D" parent="Shape"]
-position = Vector2( 1.16632, -1.16635 )
-emitting = false
-amount = 6
-lifetime = 3.0
-local_coords = false
-process_material = SubResource( 8 )
-texture = ExtResource( 3 )
+[node name="Particles2D" parent="Shape" instance=ExtResource( 3 )]
 
 [node name="Audio" type="AudioStreamPlayer2D" parent="Shape"]
 position = Vector2( 1.16632, -1.16635 )

@@ -92,10 +92,11 @@ func build(points) :
 			#POINTS.append(points[-1])
 			POINTS.append(POINTS[-1] + direction)
 		POINTS.append(points[i+1])
-	
-	
+		
 	self.set_points(POINTS)
 #	OLD_POSITION = self.points[-1]
+
+	$Particles2D.set_position(points[0])
 	
 	$AudioNode.position = self.points[-1]
 	var sample = samples[randi()%samples.size()]
@@ -143,5 +144,7 @@ func _process(delta):
 	#mouvement_2(delta)
 	mouvement_3(delta, attraction)
 	$AudioNode.position = self.points[-1]
+	
+	$Particles2D.set_position(points[0])
 
 	#mouv()
