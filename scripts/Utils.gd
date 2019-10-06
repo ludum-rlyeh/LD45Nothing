@@ -26,7 +26,6 @@ func remove_duplicates(var array):
 		if not n_array.has(val):
 			n_array.append(val)
 	return n_array
-<<<<<<< HEAD
 	
 # split the list of points in a list of edges (array of array of 2 points)
 func splitByEdges(points : Array, line_closed : bool):
@@ -113,7 +112,6 @@ func getVector(pt1, pt2):
 	
 func getNormalizedVector(pt1, pt2):
 	return getVector(pt1, pt2).normalized()
-=======
 
 # test and teleport boid if out of viewport
 func out_of_viewport(var boid):
@@ -128,4 +126,3 @@ func out_of_viewport(var boid):
 		boid.position.y = viewport_size.y + viewport_size.y / 4.0
 	elif boid.position.y > viewport_size.y + viewport_size.y / 4.0:
 		boid.position.y = - viewport_size.y / 4.0
->>>>>>> b2fc6a42f5334c55cc2fd3a8c16435ca83ee33f7

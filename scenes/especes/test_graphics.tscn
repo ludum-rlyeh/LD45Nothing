@@ -1,0 +1,136 @@
+[gd_scene load_steps=6 format=2]
+
+[sub_resource type="VisualShader" id=4]
+graph_offset = Vector2( 0, 156.25 )
+
+[sub_resource type="ShaderMaterial" id=5]
+shader = SubResource( 4 )
+
+[sub_resource type="Shader" id=1]
+resource_local_to_scene = true
+code = "shader_type canvas_item;
+//https://www.shadertoy.com/view/4d3SD8
+
+// sorry this is a mess right now! i will write up a blog post about what the code
+// below was written to do and update this later.
+
+float GetAngle( float i, float t )
+{
+    //float amp = .75; //.25 is subtle wriggling
+	//t += amp*sin(1.*t + 4.*iTime + float(i));
+    float dir = mod(i,2.) < 0.5 ? 1. : -1.;
+    return dir * (1./(.5*i+1.)+1.) * t + i/2.;
+}
+
+float Potential( int numNodes, vec2 x , vec2 pos1)
+{
+    if( numNodes == 0 ) return 0.;
+
+    float res = 0.;
+    float k = 16.;
+    for( int i = 0; i < 1; i++ )
+    {
+        if( i == numNodes ) break;
+        res += exp( -k * length( pos1 - x ) );
+    }
+    return -log(res) / k;
+}
+
+void ComputePos_Soft( float t, vec2 pos1)
+{
+	float ten_r = 0.04;
+    for( int i = 0; i < 1; i++ )
+    {
+        float a = GetAngle( float(i), t );
+        vec2 d = vec2(cos(a),sin(a));
+        float r = ten_r;
+
+        for( int j = 0; j < 3; j++ )
+        {
+            r += ten_r-Potential(i,r*d, pos1);
+        }
+
+        pos1 = r * d;
+    }
+}
+
+
+vec3 drawSlice( vec2 uv , vec2 pos1, float time)
+{
+    float t = time/2.;
+    ComputePos_Soft(t, pos1);
+    float pot = Potential(1,uv, pos1);
+    return vec3(smoothstep(0.03,0.01,pot));
+}
+
+void fragment()
+{
+	vec2 pos1;
+	float ten_r = 0.04;
+	vec2 viewport_size = vec2(50,50);
+	vec2 uv = FRAGCOORD.xy / viewport_size;
+    
+    // sample from previous frame, with slight offset for advection
+    vec4 color = textureLod( SCREEN_TEXTURE, uv*.992, 0. );
+    
+    // clear on first frame (dont know if this is required)
+    // if( iFrame == 0 ) fragColor = vec4(0.);
+    
+    // camera
+    uv.x += .1*sin(.7*TIME);
+    uv.y += .05*sin(.3*TIME);
+    uv = 2. * uv - 1.;
+    uv.x *= viewport_size.x/viewport_size.y;
+    
+    // draw spots
+    vec3 spots = drawSlice( uv , pos1, TIME);
+    
+    // accumulate
+    color.rgb = color.rgb*.95 + spots;
+	COLOR = color;
+}
+"
+
+[sub_resource type="ShaderMaterial" id=2]
+resource_local_to_scene = true
+shader = SubResource( 1 )
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends Polygon2D
+
+var RAND_SCALE = 1
+var LOOP_MAX = 100
+var LOOP_CURRENT = 0
+var DIRECTION_X = randf()
+var DIRECTION_Y = randf()
+var DIRECTIONS = Vector2(DIRECTION_X,DIRECTION_Y).normalized()
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	if LOOP_CURRENT > LOOP_MAX :
+		LOOP_CURRENT = 0
+		var dir_x = randf() * RAND_SCALE * pow(-1,(randi() % 2))
+		var dir_y = randf() * RAND_SCALE * pow(-1,(randi() % 2))
+		DIRECTIONS = Vector2(dir_x,dir_y)
+
+	self.move_local_x(DIRECTIONS[0])
+	self.move_local_y(DIRECTIONS[1])
+"
+
+[node name="Node2D" type="Node2D"]
+material = SubResource( 5 )
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+material = SubResource( 2 )
+position = Vector2( 103.762, 37.8375 )
+scale = Vector2( 0.0970331, 0.141675 )
+polygon = PoolVector2Array( 114.913, 51.1153, 120.187, 560.961, 948.246, 566.235, 932.423, 44.083 )
+script = SubResource( 3 )
