@@ -37,7 +37,6 @@ func mouvement_2(delta) :
 		
 		DIRECTION = new_direction
 	
-	
 	var new_offset = (Vector2(abs(cos(TIME)),abs(sin(TIME))).normalized() * (DIRECTION * sqrt(2))).normalized()
 
 	POINTS.remove(0)
