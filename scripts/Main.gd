@@ -10,6 +10,7 @@ func _on_new_boid(var boid_type, var line2d):
 
 func add_boid(var boid_type, var line2d):
 	var boid = null
+	print_debug(boid_type)
 	
 	match boid_type :
 		"point":
