@@ -15,6 +15,13 @@ var THRESHOLD_ANGLE_SAME_SLOPE = 0.9
 #	var points = [Vector2(0,0), Vector2(2,2), Vector2(4,4.1), Vector2(2,3), Vector2(2, 0), Vector2(-3,-3)]
 #	print(detectEdge(0, points))
 #	print(detectEdge(3, points))
+
+func get_barycenter(points):
+	var bary = Vector2.ZERO
+	for pt in points:
+		bary += pt
+	bary /= points.size()
+	return bary
 	
 
 func getBBox(points):

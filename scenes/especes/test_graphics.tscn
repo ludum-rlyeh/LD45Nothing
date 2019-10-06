@@ -1,34 +1,9 @@
 [gd_scene load_steps=4 format=2]
 
-[sub_resource type="Shader" id=5]
-code = "shader_type canvas_item;
+[ext_resource path="res://shaders/ink.tres" type="Material" id=1]
+[ext_resource path="res://icon.png" type="Texture" id=2]
 
-uniform sampler2D my_array;
-uniform int size;
-uniform mat4 proj_mat;	
-
-vec2 get_array_value(ivec2 coord, mat4 T)
-{
-	// retrieve r component on the desired array position
-	vec2 pt = texelFetch(my_array, coord, 0).rg;
-	// the resulting value is in srgb space, so convert it back to linear space
-	pt *= 255.;
-	return PROJECTION_MATRIX * pt;
-}
-
-void fragment()
-{
-	vec2 result = vec2(0);
-		
-	if(distance(FRAGCOORD, result) < 1);
-	{
-	}
-}"
-
-[sub_resource type="ShaderMaterial" id=4]
-shader = SubResource( 5 )
-
-[sub_resource type="GDScript" id=1]
+[sub_resource type="GDScript" id=3]
 script/source = "extends Polygon2D
 
 var RAND_SCALE = 1
@@ -49,6 +24,13 @@ func _ready():
 	
 	var points = get_polygon()
 	var bary = Utils.get_barycenter(points)
+	
+	points = $Polygon2D2.get_polygon()
+	var bary2 = Utils.get_barycenter(points)
+	
+	$Polygon2D2.translate(bary2 - bary)
+	
+	
 	var new_points = []
 	for pt in points:
 		var v = pt - bary
@@ -61,13 +43,11 @@ func _ready():
 	
 	
 	var rect = Utils.getBBox(get_polygon())
-	get_viewport().get_visible_rect().size	
-	get_material().set_shader_param(\"iresolution\", rect.size)  # pass screen size on shader script
+	get_viewport().get_visible_rect().size
+	get_material().set_shader_param(\"resolution\", rect.size)  # pass screen size on shader script
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	
-	material.set_shader_param(\"proj_mat\", get_viewport().get_camera().projection())
 	
 	if LOOP_CURRENT > LOOP_MAX :
 		LOOP_CURRENT = 0
@@ -81,11 +61,16 @@ func _process(delta):
 
 [node name="Node2D" type="Node2D"]
 
+[node name="ColorRect" type="ColorRect" parent="."]
+margin_right = 1023.0
+margin_bottom = 598.0
+
 [node name="Polygon2D" type="Polygon2D" parent="."]
-material = SubResource( 4 )
-position = Vector2( 246.895, 113.168 )
+material = ExtResource( 1 )
+position = Vector2( 181.782, 52.1039 )
 scale = Vector2( 0.552154, 0.66776 )
-color = Color( 0.0980392, 0.0901961, 0.0901961, 1 )
+color = Color( 0, 0, 0, 1 )
+texture = ExtResource( 2 )
 texture_offset = Vector2( -150, -150 )
-polygon = PoolVector2Array( 114.913, 51.1153, 120.187, 560.961, 976.869, 596.383, 932.423, 44.083 )
-script = SubResource( 1 )
+polygon = PoolVector2Array( 14.2124, 120.648, 43.9942, 615.527, 976.869, 596.383, 1083.74, 52.6196 )
+script = SubResource( 3 )
