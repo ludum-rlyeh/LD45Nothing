@@ -105,6 +105,7 @@ func _ready():
 	
 	pass # Replace with function body.
 
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	var distance_min_to_point = DISTANCE_ATTRACTION + 1.0
@@ -125,7 +126,6 @@ func _process(delta):
 	var attraction = Vector2(0.0,0.0)
 	if distance_min_to_point < DISTANCE_ATTRACTION :
 		attraction = (nearest_point.position - POINTS[-1]).normalized()
-	
 	
 	#mouvement_2(delta)
 	mouvement_3(delta, attraction)

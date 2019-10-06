@@ -122,19 +122,20 @@ func getNormalizedVector(pt1, pt2):
 # test and teleport boid if out of viewport
 func out_of_viewport(var boid):
 	var viewport_size = get_viewport().get_size()
+	var changed = 0
 	
 	if boid.position.x < -viewport_size.x/4.0 :
 		boid.position.x = viewport_size.x + viewport_size.x/4.0
-		return 1
+		changed = 1
 	elif boid.position.x > viewport_size.x + viewport_size.x/4.0 :
 		boid.position.x = -viewport_size.x/4.0
-		return 1
+		changed = 1
 	
 	if boid.position.y < -viewport_size.y / 4.0 :
 		boid.position.y = viewport_size.y + viewport_size.y / 4.0
-		return 1
+		changed = 1
 	elif boid.position.y > viewport_size.y + viewport_size.y / 4.0:
 		boid.position.y = - viewport_size.y / 4.0
-		return 1
+		changed = 1
 	
-	return 0
+	return changed

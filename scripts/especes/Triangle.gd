@@ -14,6 +14,9 @@ var attraction_dist = 200
 var orientation_dist = 180
 var separation_dist = 100
 
+var DISTANCE_GROUP = 150
+var LAST_ELEM_GROUP = 0
+
 func _ready():
 	randomize()
 	self.add_to_group("triangle")
@@ -40,6 +43,9 @@ func build(var points):
 func _process(delta):
 	var boids = get_tree().get_nodes_in_group("triangle")
 	
+	var elem_group = 0
+	var all_distances = 0.0
+	
 	if boids.size() > 1 :
 		var attraction_vec2 = Vector2(0.0, 0.0)
 		var orientation_vec2 = Vector2(0.0, 0.0) 
@@ -64,6 +70,10 @@ func _process(delta):
 						# separation
 						if dist <= separation_dist :
 							separation_vec2 = separation_vec2 - (b_pos - self.position)
+				# Color
+				if dist < DISTANCE_GROUP :
+					elem_group += 1
+					all_distances += dist
 	
 		if n_attract != 0 :
 			attraction_vec2 /= n_attract 
@@ -76,6 +86,9 @@ func _process(delta):
 		self.velocity += attraction_vec2 + orientation_vec2 + separation_vec2
 		self.velocity = limit_velocity(self.velocity)
 		
+#		if(boids.size() > 1) && (LAST_ELEM_GROUP != elem_group) :
+#			$Shape.color = Color(elem_group/7.0 + randf()*0.1, 0.1 + randf()*0.1, 0.1 + randf()*0.1, 1.0)
+#			LAST_ELEM_GROUP = elem_group
 	
 	
 	self.position += self.velocity * delta
