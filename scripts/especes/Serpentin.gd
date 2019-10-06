@@ -2,6 +2,9 @@ extends Line2D
 
 var POINTS
 var LOOP = 0
+var TIME = 0
+var DIRECTION = Vector2(randf() * pow(-1,randi()%2),randf() * pow(-1,randi()%2)).normalized()
+var NUMBER_SLOOPS = 6
 
 func mouv():
 	POINTS.append(POINTS[-1]+Vector2(15.0,0))
@@ -16,20 +19,54 @@ func mouvement_1(delta) :
 		new_direction = Vector2(randf() * pow(-1,randi()%2), randf() * pow(-1,randi()%2)).normalized()
 
 	POINTS.remove(0)
-	print(new_direction.angle_to(direction))
 	POINTS.append(POINTS[-1] + new_direction * 1)
 	self.set_points(POINTS)
+
 	
-	print(POINTS)
+func mouvement_2(delta) :
+	TIME += delta
+	if TIME > PI :
+		TIME = 0.0
+		var new_direction = Vector2(randf() * pow(-1,randi()%2), randf() * pow(-1,randi()%2)).normalized()
+		while (abs(new_direction.angle_to(DIRECTION)) > 1.0) :
+			new_direction = Vector2(randf() * pow(-1,randi()%2), randf() * pow(-1,randi()%2)).normalized()
+		
+		DIRECTION = new_direction
 	
+	
+	var new_offset = (Vector2(abs(cos(TIME)),abs(sin(TIME))).normalized() * (DIRECTION * sqrt(2))).normalized()
+
+	POINTS.remove(0)
+	POINTS.append(POINTS[-1] + new_offset * 1)
+	self.set_points(POINTS)
+	
+	
+func mouvement_3(delta) :
+	TIME += delta
+	if TIME > (PI) :
+		TIME = 0.0
+		var new_direction = Vector2(randf() * pow(-1,randi()%2), randf() * pow(-1,randi()%2)).normalized()
+		while (abs(new_direction.angle_to(DIRECTION)) > 1.0) :
+			new_direction = Vector2(randf() * pow(-1,randi()%2), randf() * pow(-1,randi()%2)).normalized()
+		
+		DIRECTION = new_direction
+	
+	
+	var new_offset = Vector2(DIRECTION[1] * -1.0, DIRECTION[0]) * sin(TIME*NUMBER_SLOOPS)  + DIRECTION
+	
+
+	POINTS.remove(0)
+	POINTS.append(POINTS[-1] + new_offset * 1)
+	self.set_points(POINTS)
 
 func build(points) :
 	POINTS = points
+#	OLD_POSITION = self.points[-1]
+	
 	pass
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	
 	randomize()
 	var points = PoolVector2Array([Vector2(100.0,100.0), Vector2(130.0,100.0), Vector2(145.0,100.0), Vector2(160.0,100.0), Vector2(175.0,100.0), Vector2(190.0,100.0)])
 	var array = []
@@ -45,6 +82,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	mouvement_1(delta)
+	#mouvement_2(delta)
+	mouvement_3(delta)
 	#mouv()
 	pass
