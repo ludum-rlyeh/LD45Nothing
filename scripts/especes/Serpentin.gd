@@ -16,11 +16,11 @@ func mouvement_1(delta) :
 		new_direction = Vector2(randf() * pow(-1,randi()%2), randf() * pow(-1,randi()%2)).normalized()
 
 	POINTS.remove(0)
-	print(new_direction.angle_to(direction))
+#	print(new_direction.angle_to(direction))
 	POINTS.append(POINTS[-1] + new_direction * 1)
 	self.set_points(POINTS)
 	
-	print(POINTS)
+#	print(POINTS)
 	
 
 func build(points) :
