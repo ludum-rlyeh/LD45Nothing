@@ -52,6 +52,8 @@ func build(var points):
 #	var base = min_edge[1] - min_edge[0]
 	BASE = base/2.0 + edges[0][0]
 	self.position = BASE
+	
+	
 	NORMAL = Vector2(-base[1], base[0])
 	
 	#other NORMAL
@@ -72,10 +74,7 @@ func build(var points):
 #			NORMAL *= -1.0
 #	else :
 #		if base.angle_to(edges[0][1] - edges[0][0]) < 0.0 :
-#			NORMAL *= -1.0
-	
-	
-	
+#			NORMAL *= -1.0		
 	
 	var n_points = PoolVector2Array()
 	for point in points:
@@ -83,6 +82,11 @@ func build(var points):
 	
 #	$Shape.set_polygon(n_points)
 	$Shape.set_points(n_points)
+	
+	var rot = Vector2.RIGHT.angle_to(-NORMAL)
+	print("rot : ", rot)
+	
+	$Particles2D.rotate(rot)
 	
 	
 	scale_factor = Vector2(1,1) + Vector2(rand_range(-0.2,0.2), 0.0)
