@@ -1,7 +1,7 @@
 # Shuǐmòhuà
 
 According to the theme "Start with nothing", 
-we like to think that the gamefeel will be better 
+we like to think that the gamefell will be better 
 if the player has no information when s/he will start the
 game.
 
@@ -11,16 +11,25 @@ For a better experience, please use headphone.
 
 And to play our game, it's right [HERE](https://ludum-rlyeh.github.io/LD45Nothing/LD45.html) :)
 
-Don't forget to follow us on our [Ludum Game's Page](Tout doux) and give us your feedbacks !
-
-## Other releases
-
-Tout doux
-
 ## Team
 
-Tout doux
+@Avzgui : dev and sound design
+
+@chtimy : dev and graphics
+
+@leoreynaud : dev and dev
+
+@adfaure : moral support and beta test
+
+## Releases
+
+HTML5 : https://ludum-rlyeh.github.io/LD45Nothing/LD45.html
+
+Windows : tout doux
+
 
 ## Information
+
+Web release may be slow to start, so wait for it ;)
 
 If audio on Google Chrome doesn't work you may need to press a key.
