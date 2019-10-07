@@ -74,7 +74,7 @@ func mouvement_3(delta, attraction) :
 	
 
 	POINTS.remove(0)
-	POINTS.append(POINTS[-1] + (new_offset * DISTANCE/AMPLITUDE))
+	POINTS.append(POINTS[-1] + (new_offset * DISTANCE/AMPLITUDE * 0.7))
 	self.set_points(POINTS)
 
 func build(points) :
