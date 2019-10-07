@@ -26,10 +26,10 @@ func build(var points):
 	$Shape.position = box.position
 	$Shape.build(points)
 	
-	$Tween.interpolate_property(self, \"mask_radius\", MASK_RADIUS_INIT, MASK_RADIUS_FINAL, MASK_GROW_TIMER,Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
-	$Tween.connect(\"tween_step\", self, \"update_animation_grow_ink\")
-	$Tween.connect(\"tween_completed\", self, \"start_moving\")
-	$Tween.start()
+#	$Tween.interpolate_property(self, \"mask_radius\", MASK_RADIUS_INIT, MASK_RADIUS_FINAL, MASK_GROW_TIMER,Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+#	$Tween.connect(\"tween_step\", self, \"update_animation_grow_ink\")
+#	$Tween.connect(\"tween_completed\", self, \"start_moving\")
+#	$Tween.start()
 
 func update_animation_grow_ink(  object,  key,  elapsed,  value ):
 	$Drop.get_material().set_shader_param(\"radius\", mask_radius)
@@ -80,19 +80,20 @@ load_path = "res://.import/ink_drop2.png-88af4311e61235e7f0d9588dd7e5f946.stex"
 script = SubResource( 1 )
 
 [node name="Drop" type="Sprite" parent="."]
+visible = false
 material = SubResource( 3 )
 position = Vector2( -6.85899, 9.43112 )
 scale = Vector2( 0.1, 0.1 )
 texture = SubResource( 4 )
 
 [node name="Shape" type="Sprite" parent="."]
-visible = false
 position = Vector2( -1.16632, 1.16635 )
 scale = Vector2( 0.3, 0.3 )
 texture = ExtResource( 1 )
 script = ExtResource( 2 )
 
 [node name="Particles2D" parent="Shape" instance=ExtResource( 3 )]
+emitting = true
 
 [node name="Audio" type="AudioStreamPlayer2D" parent="Shape"]
 position = Vector2( 1.16632, -1.16635 )

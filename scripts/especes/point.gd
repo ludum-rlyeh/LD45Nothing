@@ -46,7 +46,7 @@ func _ready():
 	var sample = samples[randi() % samples.size()]
 	$Audio.stream = load(sample)
 	
-	set_process(false)
+#	set_process(false)
 	
 
 # warning-ignore:unused_argument
