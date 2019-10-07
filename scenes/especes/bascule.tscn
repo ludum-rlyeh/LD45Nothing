@@ -61,12 +61,8 @@ stream = ExtResource( 2 )
 bus = "bell"
 
 [node name="Particles2D" type="Particles2D" parent="Shape"]
-emitting = false
-amount = 100
+amount = 4
 lifetime = 3.0
 local_coords = false
 process_material = SubResource( 6 )
 texture = SubResource( 7 )
-__meta__ = {
-"_edit_lock_": true
-}

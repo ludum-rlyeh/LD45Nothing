@@ -47,12 +47,7 @@ func _ready():
 	
 func _process(delta):
 	move(delta)
-	
-	if !flip:
-		var t = init_vec_line
-		$Particles2D.set_position(t)
-	else:
-		$Particles2D.set_position(Vector2(0,0))
+
 		
 
 func build(shape):
@@ -76,9 +71,6 @@ func move(delta):
 	var total_angleRad = deg2rad(total_angle)
 	var angleInRad = deg2rad(angleInDeg)
 	
-	
-	
-#
 	if ((direction == -1 && cumulate_angle + angleInDeg < (1.5 * total_angle)) || (direction == 1 && cumulate_angle + angleInDeg > (1.5*total_angle))):
 		direction = random_direction()
 		total_angle = direction * new_angle()
@@ -86,7 +78,11 @@ func move(delta):
 		cumulate_angle = 0
 		$Audio.play()
 		self.points = INIT_POINTS
-		
+		if !flip:
+			$Particles2D.set_position(Vector2(0,0))
+		else:
+			var t = init_vec_line
+			$Particles2D.set_position(t)
 	else:
 		cumulate_angle += angleInDeg
 		cumulate_angleRad = deg2rad(cumulate_angle)
