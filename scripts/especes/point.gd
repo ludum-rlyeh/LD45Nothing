@@ -40,7 +40,6 @@ var SPEED_INTERPOLATION = 20.0
 var OLD_POSITIONS = []
 
 var POINTS = []
-
 var OLD_POINT
 var TIME = 0
 
@@ -133,7 +132,6 @@ func out_of_bound_target() :
 	
 	
 func mouvement_4(delta):
-	
 	var dir_x = randf() *  pow(-1,(randi() % 2))
 	var dir_y = randf() *  pow(-1,(randi() % 2))
 	var dirs = Vector2(dir_x,dir_y).normalized() * DISTANCE_TARGET
