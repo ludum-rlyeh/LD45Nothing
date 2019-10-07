@@ -155,3 +155,6 @@ func out_of_viewport(var boid):
 		changed = 1
 	
 	return changed
+
+func Viewport_dimensions() :
+	return get_viewport().get_size()
