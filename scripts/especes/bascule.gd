@@ -28,11 +28,14 @@ var init_vec_line
 
 var THICK = 5
 
+var VIEWPORT_SIZE
+
 var flip = false
 
 var direction = 1
 
 var ORIGINS 
+var OFFSET
 
 var INIT_POINTS
 var DELAYED 
@@ -52,6 +55,7 @@ func _process(delta):
 
 func build(shape):
 	var offset = shape[0]
+	OFFSET = offset
 	var pts2 = []
 	for pt in shape:
 		pts2.append(pt - offset)
@@ -65,6 +69,8 @@ func build(shape):
 	DELAYED = []
 	for i in range(0,self.points.size()) :
 		DELAYED.append(0)
+		
+	VIEWPORT_SIZE = Utils.Viewport_dimensions()
 	
 func move(delta):
 	var angleInDeg = direction * SPEED_ANGLE * delta
@@ -77,7 +83,7 @@ func move(delta):
 		flip = !flip
 		cumulate_angle = 0
 		$Audio.play()
-		self.points = INIT_POINTS
+#		self.points = INIT_POINTS
 		if !flip:
 			$Particles2D.set_position(Vector2(0,0))
 		else:
@@ -131,9 +137,17 @@ func move(delta):
 				if curr_step_point > curr_step :
 					self.points[i] = self.points[i].rotated(-0.7*angleInRad*(1.0 - curr_step_point)*2.0)
 	
-	
-	
-	
+	var transformed = get_transform()[2]
+	var new_base = transformed + OFFSET
+	print(transformed, " ", OFFSET, " ", OFFSET + transformed)
+	if (new_base[0] < -VIEWPORT_SIZE[0]/3.0) :
+		translate(Vector2(VIEWPORT_SIZE[0] * (1.0+1.0/3.0),0.0))
+	if (new_base[0] > VIEWPORT_SIZE[0] * (1.0+1.0/3.0)) :
+		translate(Vector2(-1.0*VIEWPORT_SIZE[0] * (1.0+1.0/3.0),0.0))
+	if (new_base[1] < -VIEWPORT_SIZE[1]/3.0) :
+		translate(Vector2(0.0,VIEWPORT_SIZE[1] * (1.0+1.0/3.0)))
+	if (new_base[1] > VIEWPORT_SIZE[1] * (1.0+1.0/3.0)) :
+		translate(Vector2(0.0,-1.0*VIEWPORT_SIZE[1] * (1.0+1.0/3.0)))
 			
 		
 func random_angle_between(minVal, maxVal):

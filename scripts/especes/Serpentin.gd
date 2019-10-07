@@ -121,7 +121,6 @@ func build(points) :
 	$AudioNode/Audio.stream = load(sample)
 	
 	VIEWPORT_SIZE = Utils.Viewport_dimensions()
-	print(VIEWPORT_SIZE)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
