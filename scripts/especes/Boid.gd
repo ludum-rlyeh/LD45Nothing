@@ -43,7 +43,8 @@ func build(var points):
 #		deformation_coefs.append(rand_range(-1,1))
 #		normal.append(Utils.process_normal_3_points(i, points))
 		
-	$Shape.set_polygon(n_points)
+#	$Shape.set_polygon(n_points)
+	$Shape.set_points(n_points)
 	
 	
 	scale_factor = Vector2(1,1) + Vector2(rand_range(-0.2,0.2), rand_range(-0.2,0.2))

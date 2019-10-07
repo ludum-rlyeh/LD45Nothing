@@ -34,7 +34,8 @@ func build(var points):
 	for point in points:
 		n_points.append(point - self.position)
 	
-	$Shape.set_polygon(n_points)
+#	$Shape.set_polygon(n_points)
+	$Shape.set_points(n_points)
 	
 	
 	

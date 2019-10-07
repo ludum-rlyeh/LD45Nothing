@@ -33,8 +33,8 @@ func build(var points):
 	for point in points:
 		n_points.append(point - self.position)
 	
-	$Shape.set_polygon(n_points)
-	$Line2D.set_points(n_points)
+#	$Shape.set_polygon(n_points)
+	$Shape.set_points(n_points)
 	
 	
 	scale_factor = Vector2(1,1) + Vector2(rand_range(-0.2,0.2), 0.0)
