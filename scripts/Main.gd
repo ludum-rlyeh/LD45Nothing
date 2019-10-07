@@ -60,7 +60,7 @@ func add_boid(var boid_type, var line2d, var points):
 		"circle":
 			boid = preload("res://scenes/especes/Boid.tscn").instance()
 		"triangle":
-			boid = preload("res://scenes/especes/Triangle.tscn").instance()
+			boid = preload("res://scenes/especes/Triangle2.tscn").instance()
 		"square":
 			boid = preload("res://scenes/especes/Square.tscn").instance()
 		"snake":
