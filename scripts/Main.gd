@@ -5,6 +5,9 @@ var viewport
 
 var bg
 
+var ressource = preload("res://assets/BG.jpg")
+
+
 #var viewport_text0
 #var viewport_text1
 #var viewport_text2
@@ -17,7 +20,7 @@ func _ready():
 	canvas.connect("_new_boid_sig", self, "_on_new_boid")
 	
 	bg = ImageTexture.new()
-	bg.load("res://assets/BG.jpg")
+	bg.create_from_image(ressource.get_data())
 	
 	$ViewportContainer.material.set_shader_param("BGTexture", bg)
 #	$ViewportContainer.material.set_shader_param("ViewportTexture", render_text)

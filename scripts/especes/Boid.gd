@@ -1,5 +1,8 @@
 extends Node2D
 
+var deformation_coefs = []
+var normals = []
+
 var samples = [
 	"res://assets/sounds/shamisenD.ogg",
 	"res://assets/sounds/shamisenDontKnow.ogg",
@@ -21,6 +24,8 @@ func _ready():
 	# set ramdom sound
 	var sample = samples[randi() % samples.size()]
 	$Audio.stream = load(sample)
+	
+#	build([Vector2(100,100), Vector2(150,100), Vector2(150,150), Vector2(100,150)])
 
 func build(var points):
 	
@@ -29,13 +34,18 @@ func build(var points):
 	self.position = rect.position
 	
 	var n_points = PoolVector2Array()
+	var i = 0
 	for point in points:
-		n_points.append(point - self.position)
-	
+		var pt = point - self.position
+		n_points.append(pt)
+#		deformation_coefs.append(rand_range(-1,1))
+#		normal.append(Utils.process_normal_3_points(i, points))
+		
 	$Shape.set_polygon(n_points)
 	
-	
 	velocity = Vector2(rand_range(-1.0,1.0), rand_range(-1.0,1.0))
+	
+
 
 func _process(delta):
 	var boids = get_tree().get_nodes_in_group("boids")
@@ -75,11 +85,11 @@ func _process(delta):
 		
 		self.velocity += attraction_vec2 + orientation_vec2 + separation_vec2
 		self.velocity = limit_velocity(self.velocity)
-		
-	
-	
+			
 	self.position += self.velocity * delta
 	Utils.out_of_viewport(self)
+	
+
 
 func limit_velocity(var velocity) :
 	if velocity.length() > MAX_VELOCITY :

@@ -2,6 +2,15 @@ extends Node
 
 var THRESHOLD_ANGLE_SAME_SLOPE = 0.9
 
+func process_normal_3_points(var i, var pts):
+	var v = pts[i] - pts[i+1]
+	var n1 = Vector2(-v.y, v.x)
+	
+	var v2 = pts[i-1] - pts[i]
+	var n2 = Vector2(-v2.y, v2.x)
+	
+	return (n1 + n2) / 2.0
+
 #func _ready():
 #	print(incrementIndexInArray(5, 3, 6))
 #	print(decrementIndexInArray(3, 8, 6))
