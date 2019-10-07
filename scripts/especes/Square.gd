@@ -15,6 +15,8 @@ var TIME = 0
 var scale_factor = Vector2(1.0, 1.0)
 var TIME_SCALE_ANIMATION = 1.0
 
+var ROTATION
+
 func _ready():
 	randomize()
 	self.add_to_group("square")
@@ -26,8 +28,10 @@ func _ready():
 func build(var points):
 	
 	var rect = Utils.getBBox(points)
+	var barycentre = Utils.get_barycenter(points)
 	
-	self.position = rect.position
+#	self.position = rect.position
+	self.position = barycentre
 	OLD_POINT = self.position - Vector2(randf() * pow(-1,randi()%2),randf() * pow(-1,randi()%2)).normalized()
 	
 	var n_points = PoolVector2Array()
@@ -44,9 +48,12 @@ func build(var points):
 	$Tween2.interpolate_method(self, "set_scale", Vector2(1,1), scale_factor, TIME_SCALE_ANIMATION, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
 	$Tween2.connect("tween_completed", self, "scale_animation_square")
 	$Tween2.start()
+	
+	ROTATION = pow(-1,randi()%2) * PI/2.0 * randf()
 
 func _process(delta):
 	mouvement_6(delta)
+	
 	Utils.out_of_viewport(self)
 	
 func scale_animation_square( object, key):
@@ -69,8 +76,10 @@ func mouvement_6(delta) :
 			new_direction = Vector2(randf() * pow(-1,randi()%2), randf() * pow(-1,randi()%2)).normalized()
 		direction = new_direction
 		TIME = 0.0
+		ROTATION = pow(-1,randi()%2) * PI/2.0 * randf()
 	
 	OLD_POINT = self.position
 	self.set_position(self.position + direction * SPEED)
+	self.rotate(ROTATION*delta)
 	TIME += delta
 

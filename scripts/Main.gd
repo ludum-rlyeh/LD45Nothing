@@ -18,7 +18,13 @@ func _ready():
 	bg = ImageTexture.new()
 	bg.create_from_image(ressource.get_data())
 	
-	$ViewportContainer.material.set_shader_param("BGTexture", bg)	
+	$ViewportContainer.material.set_shader_param("BGTexture", bg)
+	
+	set_process_input(true)
+
+func _input(event):
+	if event.is_action_pressed("ui_cancel") :
+		get_tree().quit()
 
 func _on_new_boid(var boid_type, var line2d, var points):
 	call_deferred("add_boid", boid_type, line2d, points)
@@ -38,7 +44,7 @@ func add_boid(var boid_type, var line2d, var points):
 		"circle":
 			boid = preload("res://scenes/especes/Boid.tscn").instance()
 		"triangle":
-			boid = preload("res://scenes/especes/Triangle.tscn").instance()
+			boid = preload("res://scenes/especes/Triangle2.tscn").instance()
 		"square":
 			boid = preload("res://scenes/especes/Square.tscn").instance()
 		"snake":
