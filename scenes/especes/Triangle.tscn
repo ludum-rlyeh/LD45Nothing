@@ -5,3 +5,5 @@
 
 [node name="Triangle" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
+
+[node name="Tween2" type="Tween" parent="." index="3"]

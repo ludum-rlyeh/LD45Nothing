@@ -13,3 +13,5 @@ color = Color( 0, 0, 0, 0.666667 )
 stream = ExtResource( 2 )
 autoplay = true
 bus = "chords"
+
+[node name="Tween" type="Tween" parent="."]
