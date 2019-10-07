@@ -17,6 +17,10 @@ var separation_dist = 100
 var DISTANCE_GROUP = 150
 var LAST_ELEM_GROUP = 0
 
+
+var scale_factor = Vector2(1.0, 1.0)
+var TIME_SCALE_ANIMATION = 1.0
+
 func _ready():
 	randomize()
 	self.add_to_group("triangle")
@@ -39,6 +43,11 @@ func build(var points):
 	
 	
 	velocity = Vector2(rand_range(-1.0,1.0), rand_range(-1.0,1.0))
+	
+	scale_factor = Vector2(1,1) + Vector2(rand_range(-0.2,0.2), 0.0)
+	$Tween2.interpolate_method(self, "set_scale", Vector2(1,1), scale_factor, TIME_SCALE_ANIMATION, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	$Tween2.connect("tween_completed", self, "scale_animation_triangle")
+	$Tween2.start()
 
 func _process(delta):
 	var boids = get_tree().get_nodes_in_group("triangle")
@@ -93,6 +102,16 @@ func _process(delta):
 	
 	self.position += self.velocity * delta
 	Utils.out_of_viewport(self)
+
+	
+func scale_animation_triangle( object, key):
+	if scale_factor != Vector2(1,1):
+		$Tween2.interpolate_method(self, "set_scale", scale_factor, Vector2(1.0,1.0), TIME_SCALE_ANIMATION, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+		scale_factor = Vector2(1,1)
+	else:
+		scale_factor = Vector2(1,1) + Vector2(rand_range(-0.2,0.2), 0.0)
+		$Tween2.interpolate_method(self, "set_scale", Vector2(1,1), scale_factor, TIME_SCALE_ANIMATION, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	$Tween2.start()
 
 func limit_velocity(var velocity) :
 	if velocity.length() > MAX_VELOCITY :
