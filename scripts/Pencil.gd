@@ -7,6 +7,7 @@ func _ready():
 
 func _process(delta):
 	if Input.is_action_just_released("draw"):
+		$Audio.stop()
 		$Timer.stop()
 		emit_signal("_new_shape_sig", self)
 
