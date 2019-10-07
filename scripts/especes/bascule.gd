@@ -5,6 +5,15 @@ var samples = [
 	"res://assets/sounds/bell02.wav"
 ]
 
+var pitches = [
+	1.0, # same note
+	1.2,  # minor third
+	1.33, # perfect four
+	1.5, # perfect fifth
+	1.77, # minor seventh
+	2.0 # perfect octave
+]
+
 var MIN_ANGLE = 90
 var MAX_ANGLE = 120
 
@@ -28,8 +37,8 @@ var ORIGINS
 func _ready():
 	randomize()
 	var sample = samples[randi() % samples.size()]
-	$Audio.stream = AudioStreamRandomPitch.new()
-	$Audio.stream.set_audio_stream(load(sample))
+	$Audio.stream = load(sample)
+	$Audio.pitch_scale = pitches[randi() % pitches.size()]
 	$Audio.play()
 	
 func _process(delta):
