@@ -8,10 +8,6 @@ var bg
 var ressource = preload("res://assets/BG.jpg")
 
 
-#var viewport_text0
-#var viewport_text1
-#var viewport_text2
-
 func _ready():
 	viewport = $ViewportContainer/Viewport
 	canvas = $Canvas
@@ -22,28 +18,10 @@ func _ready():
 	bg = ImageTexture.new()
 	bg.create_from_image(ressource.get_data())
 	
-	$ViewportContainer.material.set_shader_param("BGTexture", bg)
-#	$ViewportContainer.material.set_shader_param("ViewportTexture", render_text)
-
-#	viewport_text2 = viewport.get_texture();
-#	viewport_text0 = ImageTexture.new()
-#	viewport_text0.create_from_image(viewport.get_texture().get_data())
-#	viewport_text1 = ImageTexture.new()
-#	viewport_text1.create_from_image(viewport.get_texture().get_data())
-	
-	
+	$ViewportContainer.material.set_shader_param("BGTexture", bg)	
 
 func _on_new_boid(var boid_type, var line2d, var points):
 	call_deferred("add_boid", boid_type, line2d, points)
-	
-#
-#func _process(delta):
-#	$ViewportContainer.material.set_shader_param("ViewportTexture0", viewport_text0)
-#	$ViewportContainer.material.set_shader_param("ViewportTexture1", viewport_text1)
-#	$ViewportContainer.material.set_shader_param("ViewportTexture2", viewport_text2)
-#
-#	viewport_text0.set_data(viewport_text1.get_data())
-#	viewport_text1.set_data(viewport_text2.get_data())
 	
 
 func add_boid(var boid_type, var line2d, var points):
