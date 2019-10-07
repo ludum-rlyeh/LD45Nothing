@@ -17,6 +17,7 @@ var TIME_SCALE_ANIMATION = 1.0
 var CURR_ANGLE 
 var NORMAL
 var ROTATION = 0
+var BASE
 
 func _ready():
 	randomize()
@@ -49,10 +50,9 @@ func build(var points):
 	
 	var base = edges[0][1] - edges[0][0]
 #	var base = min_edge[1] - min_edge[0]
-	print("base ", base)
-	self.position = base/2.0 + edges[0][0]
+	BASE = base/2.0 + edges[0][0]
+	self.position = BASE
 	NORMAL = Vector2(-base[1], base[0])
-	print("norm ", NORMAL)
 	
 	#other NORMAL
 	var dist_max = 0.0
