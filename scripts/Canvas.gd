@@ -33,7 +33,7 @@ func recognition(var line2d):
 		else :
 			boid_type = "snake";
 		
-		emit_signal("_new_boid_sig", boid_type, line2d)
+		emit_signal("_new_boid_sig", boid_type, line2d, points)
 	
 
 func start_and_end_are_close(var points, var max_dist) :

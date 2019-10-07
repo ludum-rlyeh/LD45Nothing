@@ -33,8 +33,8 @@ func _ready():
 	
 	
 
-func _on_new_boid(var boid_type, var line2d):
-	call_deferred("add_boid", boid_type, line2d)
+func _on_new_boid(var boid_type, var line2d, var points):
+	call_deferred("add_boid", boid_type, line2d, points)
 	
 #
 #func _process(delta):
@@ -46,7 +46,7 @@ func _on_new_boid(var boid_type, var line2d):
 #	viewport_text1.set_data(viewport_text2.get_data())
 	
 
-func add_boid(var boid_type, var line2d):
+func add_boid(var boid_type, var line2d, var points):
 #	var viewport = $Viewport
 #	viewport.render_target_clear_mode = Viewport.CLEAR_MODE_NEVER
 	var boid = null

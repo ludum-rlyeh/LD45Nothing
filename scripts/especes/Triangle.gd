@@ -40,7 +40,7 @@ func build(var points):
 		n_points.append(point - self.position)
 	
 	$Shape.set_polygon(n_points)
-	
+	$Line2D.set_points(n_points)
 	
 	velocity = Vector2(rand_range(-1.0,1.0), rand_range(-1.0,1.0))
 	
