@@ -1,1 +1,3 @@
-# LD45Nothing
+# Ludum Dare 45
+
+Theme : Start with nothing
