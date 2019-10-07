@@ -1,13 +1,12 @@
 extends Line2D
 
 var samples = [
-	"res://assets/sounds/shakuhachi01.ogg",
-	"res://assets/sounds/shakuhachi02.ogg",
-	"res://assets/sounds/shakuhachi03.ogg",
-	"res://assets/sounds/shakuhachi04.ogg",
-	"res://assets/sounds/shakuhachi05.ogg",
-	"res://assets/sounds/shakuhachi06.ogg",
-	"res://assets/sounds/shakuhachi07.ogg"
+	"res://assets/sounds/shakuhachiEaigu.ogg",
+	"res://assets/sounds/shakuhachiD.ogg",
+	"res://assets/sounds/shakuhachiB.ogg",
+	"res://assets/sounds/shakuhachiA.ogg",
+	"res://assets/sounds/shakuhachiG.ogg",
+	"res://assets/sounds/shakuhachiEgrave.ogg"
 ]
 
 var POINTS
@@ -75,7 +74,7 @@ func mouvement_3(delta, attraction) :
 	
 
 	POINTS.remove(0)
-	POINTS.append(POINTS[-1] + (new_offset * DISTANCE/AMPLITUDE))
+	POINTS.append(POINTS[-1] + (new_offset * DISTANCE/AMPLITUDE * 0.7))
 	self.set_points(POINTS)
 
 func build(points) :
