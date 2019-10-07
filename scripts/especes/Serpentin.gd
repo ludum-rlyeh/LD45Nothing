@@ -21,6 +21,8 @@ var DISTANCE_ATTRACTION = 50.0
 var TIME_ATTRACTION = 0.0
 var DISTANCE_EAT = 5.0
 
+var VIEWPORT_SIZE
+
 func mouv():
 	POINTS.append(POINTS[-1]+Vector2(15.0,0))
 	POINTS.remove(0)
@@ -57,11 +59,14 @@ func mouvement_2(delta) :
 	
 func mouvement_3(delta, attraction) :
 	TIME += delta
+	
+	var tmp
 	if TIME > (PI) :
 		TIME = 0.0
 		var new_direction = Vector2(randf() * pow(-1,randi()%2), randf() * pow(-1,randi()%2)).normalized()
 		while (abs(new_direction.angle_to(DIRECTION)) > 1.0) :
 			new_direction = Vector2(randf() * pow(-1,randi()%2), randf() * pow(-1,randi()%2)).normalized()
+			
 		
 		DIRECTION = new_direction
 	
@@ -70,9 +75,23 @@ func mouvement_3(delta, attraction) :
 		DIRECTION = attraction
 	TIME_ATTRACTION += delta
 	
+	var tmp_direction = Vector2(0.0,0.0)
+	if self.points[-1][0] < (-VIEWPORT_SIZE[0]/10.0) :
+		tmp_direction[0] = 1.0
+	elif self.points[-1][0] > (VIEWPORT_SIZE[0] * (1.0+1.0/10.0)) :
+		tmp_direction[0] = -1.0
+	
+	if self.points[-1][1] < (-VIEWPORT_SIZE[1]/10.0) :
+		tmp_direction[1] = 1.0
+	elif self.points[-1][1] > (VIEWPORT_SIZE[1] * (1.0+1.0/10.0)) :
+		tmp_direction[1] = -1.0
+		
+	if tmp_direction.length() > 0 :
+		DIRECTION = tmp_direction.normalized()
+	
 	var new_offset = (Vector2(DIRECTION[1] * -1.0, DIRECTION[0]) * sin(TIME*NUMBER_SLOOPS) * AMPLITUDE + DIRECTION)
 	
-
+	
 	POINTS.remove(0)
 	POINTS.append(POINTS[-1] + (new_offset * DISTANCE/AMPLITUDE * 0.7))
 	self.set_points(POINTS)
@@ -100,7 +119,9 @@ func build(points) :
 	$AudioNode.position = self.points[-1]
 	var sample = samples[randi()%samples.size()]
 	$AudioNode/Audio.stream = load(sample)
-
+	
+	VIEWPORT_SIZE = Utils.Viewport_dimensions()
+	print(VIEWPORT_SIZE)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
