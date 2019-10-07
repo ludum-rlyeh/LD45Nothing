@@ -79,7 +79,7 @@ func move(delta):
 	
 	
 #
-	if ((direction == -1 && cumulate_angle + angleInDeg < (2.0 * total_angle)) || (direction == 1 && cumulate_angle + angleInDeg > (2.0*total_angle))):
+	if ((direction == -1 && cumulate_angle + angleInDeg < (1.5 * total_angle)) || (direction == 1 && cumulate_angle + angleInDeg > (1.5*total_angle))):
 		direction = random_direction()
 		total_angle = direction * new_angle()
 		flip = !flip
@@ -128,12 +128,12 @@ func move(delta):
 			for i in range(1,self.points.size()-1) :
 				curr_step_point = self.points[i].length() / self.points[-1].length()
 				if curr_step_point > curr_step :
-					self.points[i] = self.points[i].rotated(+0.7*angleInRad*(1.0-curr_step_point))
+					self.points[i] = self.points[i].rotated(+0.7*angleInRad*(1.0-curr_step_point)*2.0)
 		else :
 			for i in range(1,self.points.size()-1) :
 				curr_step_point = self.points[i].length() / self.points[-1].length()
 				if curr_step_point > curr_step :
-					self.points[i] = self.points[i].rotated(-0.7*angleInRad*(1.0 - curr_step_point))
+					self.points[i] = self.points[i].rotated(-0.7*angleInRad*(1.0 - curr_step_point)*2.0)
 	
 	
 	
