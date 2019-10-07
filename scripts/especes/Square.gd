@@ -92,7 +92,6 @@ func _process(delta):
 	Utils.out_of_viewport(self)
 	
 func scale_animation_square( object, key):
-	print(scale_factor)
 	if scale_factor != Vector2(1,1):
 		$Tween2.interpolate_method(self, "set_scale", scale_factor, Vector2(1.0,1.0), TIME_SCALE_ANIMATION, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
 		scale_factor = Vector2(1,1)

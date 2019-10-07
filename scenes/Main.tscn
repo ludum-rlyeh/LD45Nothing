@@ -39,6 +39,15 @@ void fragment() {
     	coltmp += getFirstColor(TEXTURE, BGTexture, SCREEN_UV + vec2(4.0 * SCREEN_PIXEL_SIZE.x, 0.0)).xyz * 0.05;
     	coltmp += getFirstColor(TEXTURE, BGTexture, SCREEN_UV + vec2(4.0 * -SCREEN_PIXEL_SIZE.x, 0.0)).xyz * 0.05;
 		
+		coltmp += getFirstColor(TEXTURE, BGTexture, SCREEN_UV + vec2(0.0, SCREEN_PIXEL_SIZE.y)).xyz * 0.15;
+    	coltmp += getFirstColor(TEXTURE, BGTexture, SCREEN_UV + vec2(0.0, -SCREEN_PIXEL_SIZE.x)).xyz * 0.15;
+    	coltmp += getFirstColor(TEXTURE, BGTexture, SCREEN_UV + vec2(0.0, 2.0 * SCREEN_PIXEL_SIZE.x)).xyz * 0.12;
+    	coltmp += getFirstColor(TEXTURE, BGTexture, SCREEN_UV + vec2(0.0, 2.0 * -SCREEN_PIXEL_SIZE.x)).xyz * 0.12;
+    	coltmp += getFirstColor(TEXTURE, BGTexture, SCREEN_UV + vec2(0.0, 3.0 * SCREEN_PIXEL_SIZE.x)).xyz * 0.09;
+    	coltmp += getFirstColor(TEXTURE, BGTexture, SCREEN_UV + vec2(0.0, 3.0 * -SCREEN_PIXEL_SIZE.x)).xyz * 0.09;
+    	coltmp += getFirstColor(TEXTURE, BGTexture, SCREEN_UV + vec2(0.0, 4.0 * SCREEN_PIXEL_SIZE.x)).xyz * 0.05;
+    	coltmp += getFirstColor(TEXTURE, BGTexture, SCREEN_UV + vec2(0.0, 4.0 * -SCREEN_PIXEL_SIZE.x)).xyz * 0.05;
+			
 		col = vec4(coltmp, col.w);
 	}
 	else

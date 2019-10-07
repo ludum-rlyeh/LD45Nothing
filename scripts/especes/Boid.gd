@@ -54,7 +54,6 @@ func build(var points):
 	$Tween.start()
 	
 func scale_animation( object, key):
-	print("scale_animation")
 	if scale_factor != Vector2(1,1):
 		$Tween.interpolate_method(self, "set_scale", scale_factor, Vector2(1.0,1.0), TIME_SCALE_ANIMATION, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
 		scale_factor = Vector2(1,1)
