@@ -1,7 +1,7 @@
 # Shuǐmòhuà
 
 According to the theme "Start with nothing", 
-we like to think that the gamefell will be better 
+we like to think that the gamefeel will be better 
 if the player has no information when s/he will start the
 game.
 
