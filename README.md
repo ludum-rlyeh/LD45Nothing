@@ -25,7 +25,7 @@ And to play our game, it's right [HERE](https://ludum-rlyeh.github.io/LD45Nothin
 
 HTML5 : https://ludum-rlyeh.github.io/LD45Nothing/LD45.html
 
-Windows : tout doux
+Windows : https://github.com/ludum-rlyeh/LD45Nothing/releases/tag/v0-ludum
 
 
 ## Information
