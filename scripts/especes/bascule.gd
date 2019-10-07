@@ -11,6 +11,7 @@ var MAX_ANGLE = 120
 var origin = Vector2.ZERO
 var length
 var cumulate_angle = 0
+var cumulate_angleRad = 0
 var total_angle
 var SPEED_ANGLE = 60
 
@@ -23,6 +24,9 @@ var flip = false
 var direction = 1
 
 var ORIGINS 
+
+var INIT_POINTS
+var DELAYED 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -53,34 +57,79 @@ func build(shape):
 	
 	init_vec_line = ORIGINS[1] - ORIGINS[0]
 	total_angle = new_angle()
+	INIT_POINTS = self.points
+	DELAYED = []
+	for i in range(0,self.points.size()) :
+		DELAYED.append(0)
 	
 func move(delta):
 	var angleInDeg = direction * SPEED_ANGLE * delta
+	var total_angleRad = deg2rad(total_angle)
+	var angleInRad = deg2rad(angleInDeg)
+	
+	
+	
 #
-	if ((direction == -1 && cumulate_angle + angleInDeg < total_angle) || (direction == 1 && cumulate_angle + angleInDeg > total_angle)):
+	if ((direction == -1 && cumulate_angle + angleInDeg < (2.0 * total_angle)) || (direction == 1 && cumulate_angle + angleInDeg > (2.0*total_angle))):
 		direction = random_direction()
 		total_angle = direction * new_angle()
 		flip = !flip
 		cumulate_angle = 0
 		$Audio.play()
+		self.points = INIT_POINTS
+		
 	else:
 		cumulate_angle += angleInDeg
+		cumulate_angleRad = deg2rad(cumulate_angle)
 
-	var angleInRad = deg2rad(angleInDeg)
-	var T
-	var pos = position
-	if(!flip):
-		T = -pos
-	else:
-		var trans = init_vec_line.rotated(get_transform().get_rotation()) + position
-		T = -trans
-#
-	translate(T)
-
-	var transform = get_transform().rotated(angleInRad)
-	set_transform(transform)
-
-	translate(-T)
+	#var angleInRad = deg2rad(angleInDeg)
+	if abs(cumulate_angleRad) < abs(total_angleRad) :
+		var T
+		var pos = position
+		if(!flip):
+			T = -pos
+		else:
+			var trans = init_vec_line.rotated(get_transform().get_rotation()) + position
+			T = -trans
+	#
+		translate(T)
+	
+		var transform = get_transform().rotated(angleInRad)
+		set_transform(transform)
+	
+		var curr_step = abs(angleInRad/total_angleRad)
+		var curr_step_point
+	
+		if !flip :
+			for i in range(1,self.points.size()-1) :
+				curr_step_point = self.points[i].length() / self.points[-1].length()
+				if curr_step_point > curr_step :
+					self.points[i] = self.points[i].rotated(-0.7*angleInRad*(1.0-curr_step_point))
+		else :
+			for i in range(1,self.points.size()-1) :
+				curr_step_point = self.points[i].length() / self.points[-1].length()
+				if curr_step_point > curr_step :
+					self.points[i] = self.points[i].rotated(0.7*angleInRad*(1.0 - curr_step_point))
+					
+		translate(-T)
+	else :
+		var curr_step = (angleInRad/total_angleRad)
+		var curr_step_point
+		if !flip :
+			for i in range(1,self.points.size()-1) :
+				curr_step_point = self.points[i].length() / self.points[-1].length()
+				if curr_step_point > curr_step :
+					self.points[i] = self.points[i].rotated(+0.7*angleInRad*(1.0-curr_step_point))
+		else :
+			for i in range(1,self.points.size()-1) :
+				curr_step_point = self.points[i].length() / self.points[-1].length()
+				if curr_step_point > curr_step :
+					self.points[i] = self.points[i].rotated(-0.7*angleInRad*(1.0 - curr_step_point))
+	
+	
+	
+	
+			
 		
 func random_angle_between(minVal, maxVal):
 	return rand_range(minVal , maxVal)
