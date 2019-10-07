@@ -23,6 +23,10 @@ config/icon="res://icon.png"
 
 Utils="*res://scripts/Utils.gd"
 
+[display]
+
+window/size/fullscreen=true
+
 [input]
 
 draw={

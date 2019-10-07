@@ -23,6 +23,8 @@ func _ready():
 	bg.create_from_image(ressource.get_data())
 	
 	$ViewportContainer.material.set_shader_param("BGTexture", bg)
+	
+	set_process_input(true)
 #	$ViewportContainer.material.set_shader_param("ViewportTexture", render_text)
 
 #	viewport_text2 = viewport.get_texture();
@@ -31,7 +33,10 @@ func _ready():
 #	viewport_text1 = ImageTexture.new()
 #	viewport_text1.create_from_image(viewport.get_texture().get_data())
 	
-	
+
+func _input(event):
+	if event.is_action_pressed("ui_cancel") :
+		get_tree().quit()
 
 func _on_new_boid(var boid_type, var line2d, var points):
 	call_deferred("add_boid", boid_type, line2d, points)
