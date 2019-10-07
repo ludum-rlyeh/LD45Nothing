@@ -139,7 +139,7 @@ func move(delta):
 	
 	var transformed = get_transform()[2]
 	var new_base = transformed + OFFSET
-	print(transformed, " ", OFFSET, " ", OFFSET + transformed)
+#	print(transformed, " ", OFFSET, " ", OFFSET + transformed)
 	if (new_base[0] < -VIEWPORT_SIZE[0]/3.0) :
 		translate(Vector2(VIEWPORT_SIZE[0] * (1.0+1.0/3.0),0.0))
 	if (new_base[0] > VIEWPORT_SIZE[0] * (1.0+1.0/3.0)) :

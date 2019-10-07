@@ -67,7 +67,7 @@ func add_boid(var boid_type, var line2d, var points):
 			boid = preload("res://scenes/especes/Serpentin.tscn").instance()
 		
 	if boid != null :
-		boid.build(line2d.points)
+		boid.build(points)
 		viewport.add_child(boid)
 	
 	line2d.queue_free()
