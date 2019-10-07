@@ -158,3 +158,20 @@ func out_of_viewport(var boid):
 
 func Viewport_dimensions() :
 	return get_viewport().get_size()
+	
+func split_in_subarrays(array, size):
+	var arrays = []
+	while array.size() > size:
+		var pts = split_array(array, size)
+		arrays.append(array.duplicate())
+		array = pts
+	if array.size():
+		arrays.append(array.duplicate())
+	return arrays
+	
+func split_array(array, indice):
+	var array2 = []
+	for i in range(indice, array.size()):
+		array2.append(array[i])
+	array.resize(indice)
+	return array2

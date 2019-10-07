@@ -18,22 +18,34 @@ func recognition(var line2d):
 	var points = Utils.remove_duplicates(line2d.points)
 	var boid_type = null;
 	
-	if points.size() > 0 :
-		if start_and_end_are_close(points, 20) :
-			if not_a_lot_of_points(points, 10) :
+	var shape = points
+	
+	if shape.size() > 0 :
+		if start_and_end_are_close(shape, 20) :
+			if not_a_lot_of_points(shape, 10) :
 				boid_type = "point";
-			elif has_edges(points, 3)  :
+			elif has_edges(shape, 3)  :
 				boid_type = "triangle"
-			elif has_edges(points, 4):
+			elif has_edges(shape, 4):
 				boid_type = "square"
 			else:
 				boid_type = "circle";
-		elif in_box(points, 0.9) :
-			boid_type = "line";
-		else :
-			boid_type = "snake";
+			
+			emit_signal("_new_boid_sig", boid_type, line2d, shape)
+			
+		else:
+#			if(shape.size() > 400):
+#				line2d.call_deferred("queue_free")
+#				return
+			#	print(points.size())
+			var shapes = Utils.split_in_subarrays(points, 10)
+			for shape2 in shapes:
+				if in_box(shape2, 0.9) :
+					boid_type = "line";
+				else :
+					boid_type = "snake";
 		
-		emit_signal("_new_boid_sig", boid_type, line2d, points)
+				emit_signal("_new_boid_sig", boid_type, line2d, shape2)
 	
 
 func start_and_end_are_close(var points, var max_dist) :
