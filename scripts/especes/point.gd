@@ -52,6 +52,13 @@ func build(var points) :
 	OLD_POINT = self.position - Vector2(randf() * pow(-1,randi()%2),randf() * pow(-1,randi()%2)).normalized()
 	MAX_VELOCITY = rand_range(50.0, 80.0)
 	
+	set_material(get_material().duplicate())
+	#get_material().shader = get_material().shader.duplicate()
+	
+	var offset_time = rand_range(-1.0, 1.0)
+	print("offset_time: ", offset_time)
+	print(get_material())
+	get_material().set_shader_param("u_time_offset", offset_time)
 
 func _process(delta) :
 	var boids = get_tree().get_nodes_in_group("points")
