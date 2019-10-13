@@ -110,8 +110,8 @@ float shape(vec2 st, float radius, float time) {
     float f = radius;
 	
     m += noise(st+time*0.3)*0.5;
-    f += sin(a*5.)*noise(st+time*.2)*.4;
-    f += (sin(a*5.)*.5*pow(m,2.));
+    f += sin(a*1.)*noise(st+time*.2)*.4;
+    f += (sin(a*2.)*.5*pow(m,2.));
     return 1.-smoothstep(f,f+0.01,r);
 }
 
