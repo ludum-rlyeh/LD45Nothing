@@ -18,7 +18,7 @@ func _ready():
 	bg = ImageTexture.new()
 	bg.create_from_image(ressource.get_data())
 	
-	$ViewportContainer.material.set_shader_param("BGTexture", bg)
+#	$ViewportContainer.material.set_shader_param("BGTexture", bg)
 	
 	set_process_input(true)
 
@@ -51,7 +51,7 @@ func add_boid(var boid_type, var line2d, var points):
 			boid = preload("res://scenes/especes/Serpentin.tscn").instance()
 		
 	if boid != null :
-		boid.build(points)
+		boid.build(points, line2d.l_total)
 		viewport.add_child(boid)
 	
 	line2d.queue_free()

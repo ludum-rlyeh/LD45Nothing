@@ -26,14 +26,17 @@ func _ready():
 	# set ramdom sound
 	var sample = samples[randi() % samples.size()]
 	$Audio.stream = load(sample)
+	
+#	build([Vector2(100,100), Vector2(150,150), Vector2(200,200), Vector2(150,200), Vector2(100,200), Vector2(100,150), Vector2(100,100)], 300.0)
 
-func build(var points):
+func build(var points, l_total):
 	
 	var rect = Utils.getBBox(points)
 	
 	self.position = rect.position
 	
 	var edges = Utils.splitByEdges(points,true)
+	
 	var indice_edge_min = 0
 	
 #	var min_length = (edges[0][0]-edges[0][1]).length()
@@ -54,19 +57,22 @@ func build(var points):
 	self.position = BASE
 	
 	
-	NORMAL = Vector2(-base[1], base[0])
+	NORMAL = -Vector2(-base[1], base[0])
+	var bary = Utils.get_barycenter_from_edges(edges)
+	if (bary-BASE).normalized().dot(NORMAL) < 0:
+		NORMAL = -NORMAL
 	
 	#other NORMAL
-	var dist_max = 0.0
-	var vertex_far = edges[1][0]
-	for e in edges :
-		if self.position.distance_to(e[0]) > dist_max :
-			vertex_far = e[0]
-			dist_max = self.position.distance_to(e[0])
-		if self.position.distance_to(e[1]) > dist_max :
-			vertex_far = e[1]
-			dist_max = self.position.distance_to(e[1])
-	NORMAL = (vertex_far - self.position)
+#	var dist_max = 0.0
+#	var vertex_far = edges[1][0]
+#	for e in edges :
+#		if self.position.distance_to(e[0]) > dist_max :
+#			vertex_far = e[0]
+#			dist_max = self.position.distance_to(e[0])
+#		if self.position.distance_to(e[1]) > dist_max :
+#			vertex_far = e[1]
+#			dist_max = self.position.distance_to(e[1])
+#	NORMAL = (vertex_far - self.position)
 			
 			
 #	if indice_edge_min == 0 :
@@ -80,14 +86,9 @@ func build(var points):
 	for point in points:
 		n_points.append(point - self.position)
 	
-#	$Shape.set_polygon(n_points)
 	$Shape.set_points(n_points)
 	
-	var rot = Vector2.RIGHT.angle_to(-NORMAL)
-	print("rot : ", rot)
-	
-	$Particles2D.rotate(rot)
-	
+#	var rot = Vector2.RIGHT.angle_to(-NORMAL)
 	
 	scale_factor = Vector2(1,1) + Vector2(rand_range(-0.2,0.2), 0.0)
 	$Tween2.interpolate_method(self, "set_scale", Vector2(1,1), scale_factor, TIME_SCALE_ANIMATION, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
@@ -95,6 +96,10 @@ func build(var points):
 	$Tween2.start()
 	
 	ROTATION = randf() * PI / 4.0
+	
+	$Particles2D.set_position(-NORMAL.normalized()*10)
+	
+	$Shape.get_material().set_shader_param("l_total", l_total)
 
 func _process(delta):
 	#mouvement_6(delta)

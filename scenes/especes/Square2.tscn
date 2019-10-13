@@ -1,13 +1,98 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scenes/especes/Boid.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scripts/especes/Square.gd" type="Script" id=2]
 
-[node name="Square" instance=ExtResource( 1 )]
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+uniform float l_total;
+
+float mapTextureRange(float uvx, float begin, float end, float beginText, float endText)
+{
+	//0.95, 0.9, 1.0, 0.8, 1.0
+	// put the uvs between the range [0, begin - end]
+	//0.05
+	uvx -= begin;
+	// normalize between [0,1]
+	//0.5
+	uvx /= (end-begin);
+	// put the range between [0, endText-beginText]
+	// 0.1
+	uvx *= (endText - beginText);
+	// put the range between [beginText, endText]
+	//0.9
+	uvx += beginText;
+	return uvx;
+}
+
+void fragment()
+{
+	float dist_offset = 100.0;
+	float dist_offset2 = dist_offset*2.0;
+	
+	float range_uv = 0.0;
+	
+	float offset = 0.0;
+	
+	vec4 color;
+	
+	if(l_total < dist_offset2)
+	{
+		offset = 0.2;
+		range_uv = 0.2;
+		color = vec4(0.0,1.0,0.0, 1.0);
+	}
+	else
+	{
+		range_uv = dist_offset / l_total;
+		offset = range_uv;
+		color = vec4(1.0,0.0,0.0, 1.0);
+	}
+		
+	
+	float begin = offset;
+	float end = 1.0 - offset;
+	vec2 uv = UV;
+	
+	if(uv.x <= begin)
+	{
+		uv.x = mapTextureRange(uv.x, 0.0, begin, 0.0, 0.3);
+		//uv.x = 0.0;
+	}
+	else if(uv.x >= end)
+	{
+		uv.x = mapTextureRange(uv.x, end, 1.0, 0.7, 1.0);
+		//uv.x = 0.0;
+	}
+	else
+	{
+		float range_uv_i = floor(uv.x/range_uv);
+		uv.x = mapTextureRange(uv.x, range_uv_i * range_uv, (range_uv_i+1.0) * range_uv, 0.4, 0.6);
+	}
+	
+	color = texture(TEXTURE, uv);
+	
+//	float y = uv.y;
+//	if(y > 0.9 && color.a > 0.0)
+//	{
+//		y -= 0.9;
+//		y /= 0.1;
+//		//color.a = 1.0 - smoothstep(0.0, 0.5, y);
+//	}
+	
+	COLOR = color;
+}"
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
+shader_param/l_total = null
+
+[node name="Square" index="0" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
-[node name="Tween2" type="Tween" parent="." index="3"]
-
-[node name="Shape" parent="." index="4"]
+[node name="Shape" parent="." index="2"]
+material = SubResource( 2 )
 points = PoolVector2Array( 1182, 432 )
-default_color = Color( 0, 0, 0, 0.560784 )
+
+[node name="Tween2" type="Tween" parent="." index="3"]

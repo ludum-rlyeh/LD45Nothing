@@ -1,6 +1,7 @@
 extends Node
 
-var THRESHOLD_ANGLE_SAME_SLOPE = 0.9
+var THRESHOLD_ANGLE_SAME_SLOPE = 0.8
+var DIST_SAME_POINT = 10
 
 func process_normal_3_points(var i, var pts):
 	var v = pts[i] - pts[i+1]
@@ -32,6 +33,14 @@ func get_barycenter(points):
 	bary /= points.size()
 	return bary
 	
+func get_barycenter_from_edges(edges):
+	var bary = Vector2.ZERO
+	for edge in edges:
+		bary += edge[0]
+	bary /= edges.size()
+	return bary
+		
+	
 
 func getBBox(points):
 	var rect = Rect2(points[0], Vector2(0.0,0.0))
@@ -51,8 +60,6 @@ func remove_duplicates(var array):
 	
 # split the list of points in a list of edges (array of array of 2 points)
 func splitByEdges(points : Array, line_closed : bool):
-	print("line closed : ", line_closed)
-	
 	var nb_points = points.size()
 	var edges = []
 	if nb_points < 2:
@@ -60,20 +67,43 @@ func splitByEdges(points : Array, line_closed : bool):
 	var edge_indexes = detectEdge(0, points)
 	edges.append([points[edge_indexes.start], points[edge_indexes.end]])
 #	print(edge_indexes)
-	while edge_indexes.end != nb_points -1:
+	
+	while edge_indexes.end != nb_points - 1:
 		edge_indexes = detectEdge(edge_indexes.end, points)
-		print(edge_indexes)
+#		print(edge_indexes)
 		edges.append([points[edge_indexes.start], points[edge_indexes.end]])
+		
 		
 	if edges.size() > 1 && line_closed:
 		var first_edge = edges[0]
-		var last_edge = edges[edges.size()-1]
+		var last_edge = edges[-1]
 		var slope1 = getNormalizedVector(first_edge[0], first_edge[1])
 		if isInEdge(slope1, last_edge[0], last_edge[1], THRESHOLD_ANGLE_SAME_SLOPE):
 			var end_pt = last_edge[1]
 			edges.pop_back()
-			first_edge[1] = end_pt
+			edges[0][1] = end_pt
+
+	edges = mergeEdgesWithCloseSlopes(edges)
+			
 	return edges
+	
+func mergeEdgesWithCloseSlopes(edges):
+	var edges_out = []
+	for i in edges.size():
+		var slope = edges[i-1][0] - edges[i-1][1]
+		var slope2 = edges[i][0] - edges[i][1]
+#		print("DOT : ", slope.normalized().dot(slope2.normalized()))
+		if slope.length() < DIST_SAME_POINT || slope.normalized().dot(slope2.normalized()) > THRESHOLD_ANGLE_SAME_SLOPE:
+			edges[i][0] = edges[i-1][0]
+		else:
+			edges_out.append(edges[i-1])
+	
+#	var slope = edges_out[0][0] - edges_out[0][1]
+#	var slope2 = edges_out[-1][0] - edges_out[-1][1]
+#	if slope.length() < DIST_SAME_POINT || slope.normalized().dot(slope2.normalized()) > THRESHOLD_ANGLE_SAME_SLOPE:
+#		edges_out[0][0] = edges_out[-1][0]
+#		edges_out.pop_back()
+	return edges_out
 		
 #detect at the point indice the next edge and return it
 func detectEdge(indice, points):
@@ -88,23 +118,14 @@ func detectEdge(indice, points):
 	if !isValidIndex(offset, points):
 		return {"start" : indice, "end" : offset - 1}
 		
-	while isInEdge(slopeVec, init_pt, points[offset], THRESHOLD_ANGLE_SAME_SLOPE):
+	while isInEdge(slopeVec, points[offset-1], points[offset], THRESHOLD_ANGLE_SAME_SLOPE):
+#		print("is_in_edge : ", offset)
 		offset = offset + 1
 		if !isValidIndex(offset, points):
 			break
 		
 	end = offset - 1
-		
-#	if offset == indice:
-#		return {"start" : indice, "end" : end}
-#	#start starts at the first checked point (because the two first are used for building the slope vector
-#	var start = indice
-#
-#	offset = decrementIndexInArray(start, 1, nb_points)
-#	while isInEdge(slopeVec, init_pt, points[offset], THRESHOLD_ANGLE_SAME_SLOPE) && offset != indice:
-#		offset = decrementIndexInArray(offset, 1, nb_points)
-#	start = incrementIndexInArray(offset, 1, nb_points)
-#
+
 	return {"start" : indice, "end" : end}
 
 # checks if the index is inside the input array	
@@ -115,8 +136,12 @@ func isValidIndex(index, array):
 	
 # check if the target_pt is in the same edge with the slope slopeVec
 func isInEdge(slopeVec : Vector2, init_pt : Vector2, target_pt : Vector2, offset : float):
+	
+#	print ("is in edge, slopeVec : ", slopeVec, " ; init_pt : ", init_pt , "; target_pt : ", target_pt, "; offset : ", offset)
 	var slopeVec2 = getNormalizedVector(init_pt, target_pt)
+#	print("slopeVec2 : ", slopeVec2)
 	var dot_slope = slopeVec.dot(slopeVec2)
+#	print ("dot slope : ", dot_slope)
 #	print("comparaison : ", init_pt, target_pt, slopeVec2, " angle : " , dot_slope)
 	return abs(dot_slope) >= offset
 	

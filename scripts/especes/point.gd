@@ -44,15 +44,14 @@ func _ready():
 	self.add_to_group("points")
 	
 	var sample = samples[randi() % samples.size()]
-	$Audio.stream = load(sample)
-	
-#	set_process(false)
+	$Audio.stream = load(sample)	
 	
 
 # warning-ignore:unused_argument
 func build(var points) :
 	OLD_POINT = self.position - Vector2(randf() * pow(-1,randi()%2),randf() * pow(-1,randi()%2)).normalized()
 	MAX_VELOCITY = rand_range(50.0, 80.0)
+	
 
 func _process(delta) :
 	var boids = get_tree().get_nodes_in_group("points")
@@ -100,6 +99,7 @@ func _process(delta) :
 		mouvement_6(delta)
 			
 	Utils.out_of_viewport(self)
+	
 
 func die():
 	set_process(false)

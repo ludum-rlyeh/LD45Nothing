@@ -28,7 +28,7 @@ func _ready():
 	
 #	build([Vector2(100,100), Vector2(150,100), Vector2(150,150), Vector2(100,150)])
 
-func build(var points):
+func build(var points, l_total):
 	
 	var rect = Utils.getBBox(points)
 	
@@ -43,7 +43,6 @@ func build(var points):
 #		deformation_coefs.append(rand_range(-1,1))
 #		normal.append(Utils.process_normal_3_points(i, points))
 		
-#	$Shape.set_polygon(n_points)
 	$Shape.set_points(n_points)
 	
 	
@@ -51,6 +50,8 @@ func build(var points):
 	$Tween.interpolate_method(self, "set_scale", Vector2(1,1), scale_factor, TIME_SCALE_ANIMATION, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
 	$Tween.connect("tween_completed", self, "scale_animation")
 	$Tween.start()
+	
+	$Shape.get_material().set_shader_param("l_total", l_total)
 	
 func scale_animation( object, key):
 	if scale_factor != Vector2(1,1):

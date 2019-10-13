@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=13 format=2]
 
-[ext_resource path="res://scripts/especes/bascule.gd" type="Script" id=1]
-[ext_resource path="res://assets/sounds/bell02.wav" type="AudioStream" id=2]
+[ext_resource path="res://assets/ink/hiclipart.com-id_iioqm.png" type="Texture" id=1]
+[ext_resource path="res://scripts/especes/bascule.gd" type="Script" id=2]
+[ext_resource path="res://assets/sounds/bell02.wav" type="AudioStream" id=3]
 
-[sub_resource type="GDScript" id=1]
+[sub_resource type="GDScript" id=2]
 script/source = "extends Node2D
 
 #func _ready():
@@ -11,25 +12,110 @@ script/source = "extends Node2D
 #	line.set_points([Vector2(50,200), Vector2(200,200)])
 #	build(line.points)
 
-func build(points):
-	$Shape.build(points)
+func build(points, l_total):
+	$Shape.build(points, l_total)
 	
 	set_position(points[0])"
 
-[sub_resource type="Gradient" id=2]
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+uniform float l_total;
+
+float mapTextureRange(float uvx, float begin, float end, float beginText, float endText)
+{
+	//0.95, 0.9, 1.0, 0.8, 1.0
+	// put the uvs between the range [0, begin - end]
+	//0.05
+	uvx -= begin;
+	// normalize between [0,1]
+	//0.5
+	uvx /= (end-begin);
+	// put the range between [0, endText-beginText]
+	// 0.1
+	uvx *= (endText - beginText);
+	// put the range between [beginText, endText]
+	//0.9
+	uvx += beginText;
+	return uvx;
+}
+
+void fragment()
+{
+	float dist_offset = 100.0;
+	float dist_offset2 = dist_offset*2.0;
+	
+	float range_uv = 0.0;
+	
+	float offset = 0.0;
+	
+	vec4 color;
+	
+	if(l_total < dist_offset2)
+	{
+		offset = 0.2;
+		range_uv = 0.2;
+		color = vec4(0.0,1.0,0.0, 1.0);
+	}
+	else
+	{
+		range_uv = dist_offset / l_total;
+		offset = range_uv;
+		color = vec4(1.0,0.0,0.0, 1.0);
+	}
+		
+	
+	float begin = offset;
+	float end = 1.0 - offset;
+	vec2 uv = UV;
+	
+	if(uv.x <= begin)
+	{
+		uv.x = mapTextureRange(uv.x, 0.0, begin, 0.0, 0.3);
+		//uv.x = 0.0;
+	}
+	else if(uv.x >= end)
+	{
+		uv.x = mapTextureRange(uv.x, end, 1.0, 0.7, 1.0);
+		//uv.x = 0.0;
+	}
+	else
+	{
+		float range_uv_i = floor(uv.x/range_uv);
+		uv.x = mapTextureRange(uv.x, range_uv_i * range_uv, (range_uv_i+1.0) * range_uv, 0.4, 0.6);
+	}
+	
+	color = texture(TEXTURE, uv);
+	
+//	float y = uv.y;
+//	if(y > 0.9 && color.a > 0.0)
+//	{
+//		y -= 0.9;
+//		y /= 0.1;
+//		//color.a = 1.0 - smoothstep(0.0, 0.5, y);
+//	}
+	
+	COLOR = color;
+}"
+
+[sub_resource type="ShaderMaterial" id=10]
+shader = SubResource( 1 )
+shader_param/l_total = null
+
+[sub_resource type="Gradient" id=4]
 colors = PoolColorArray( 0, 0, 0, 1, 1, 1, 1, 0 )
 
-[sub_resource type="GradientTexture" id=3]
-gradient = SubResource( 2 )
+[sub_resource type="GradientTexture" id=5]
+gradient = SubResource( 4 )
 
-[sub_resource type="Curve" id=4]
+[sub_resource type="Curve" id=6]
 max_value = 0.25
 _data = [ Vector2( 0.0174372, 0.1866 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.0326 ), 0.0, 0.0, 0, 0 ]
 
-[sub_resource type="CurveTexture" id=5]
-curve = SubResource( 4 )
+[sub_resource type="CurveTexture" id=7]
+curve = SubResource( 6 )
 
-[sub_resource type="ParticlesMaterial" id=6]
+[sub_resource type="ParticlesMaterial" id=8]
 emission_shape = 1
 emission_sphere_radius = 10.0
 flag_disable_z = true
@@ -39,30 +125,33 @@ orbit_velocity = 0.0
 orbit_velocity_random = 0.0
 scale = 0.01
 scale_random = 0.1
-scale_curve = SubResource( 5 )
-color_ramp = SubResource( 3 )
+scale_curve = SubResource( 7 )
+color_ramp = SubResource( 5 )
 
-[sub_resource type="StreamTexture" id=7]
+[sub_resource type="StreamTexture" id=9]
 flags = 4
 load_path = "res://.import/ink_drop.png-23b73eaeb1d7019ab7ff2466a54fb1a4.stex"
 
 [node name="Bascule" type="Node2D"]
-script = SubResource( 1 )
+script = SubResource( 2 )
 
 [node name="Shape" type="Line2D" parent="."]
+material = SubResource( 10 )
+width = 20.0
 default_color = Color( 0, 0, 0, 1 )
-texture_mode = -1096111630
+texture = ExtResource( 1 )
+texture_mode = 2
 begin_cap_mode = 2
 end_cap_mode = 2
-script = ExtResource( 1 )
+script = ExtResource( 2 )
 
 [node name="Audio" type="AudioStreamPlayer2D" parent="Shape"]
-stream = ExtResource( 2 )
+stream = ExtResource( 3 )
 bus = "bell"
 
 [node name="Particles2D" type="Particles2D" parent="Shape"]
 amount = 4
 lifetime = 3.0
 local_coords = false
-process_material = SubResource( 6 )
-texture = SubResource( 7 )
+process_material = SubResource( 8 )
+texture = SubResource( 9 )

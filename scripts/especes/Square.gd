@@ -25,7 +25,7 @@ func _ready():
 	var sample = samples[randi() % samples.size()]
 	$Audio.stream = load(sample)
 
-func build(var points):
+func build(var points, l_total):
 	
 	var rect = Utils.getBBox(points)
 	var barycentre = Utils.get_barycenter(points)
@@ -50,6 +50,10 @@ func build(var points):
 	$Tween2.start()
 	
 	ROTATION = pow(-1,randi()%2) * PI/2.0 * randf()
+	
+	print("l_total", l_total)
+	
+	$Shape.get_material().set_shader_param("l_total", l_total)
 
 func _process(delta):
 	mouvement_6(delta)

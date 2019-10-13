@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=12 format=2]
 
-[ext_resource path="res://scripts/especes/Serpentin.gd" type="Script" id=1]
-[ext_resource path="res://assets/shape/ink_drop.png" type="Texture" id=2]
+[ext_resource path="res://assets/ink/hiclipart.com-id_iioqm.png" type="Texture" id=1]
+[ext_resource path="res://scripts/especes/Serpentin.gd" type="Script" id=2]
+[ext_resource path="res://assets/shape/ink_drop.png" type="Texture" id=3]
 
 [sub_resource type="GDScript" id=1]
 resource_name = "Serpentin"
@@ -11,8 +12,8 @@ script/source = "extends Node2D
 # var a = 2
 # var b = \"text\"
 
-func build(var points):
-	$Line2D.build(points)
+func build(var points, var l_total):
+	$Line2D.build(points, l_total)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -22,6 +23,84 @@ func _ready():
 #func _process(delta):
 #	pass
 "
+
+[sub_resource type="Shader" id=7]
+code = "shader_type canvas_item;
+
+uniform float l_total;
+
+float mapTextureRange(float uvx, float begin, float end, float beginText, float endText)
+{
+	//0.95, 0.9, 1.0, 0.8, 1.0
+	// put the uvs between the range [0, begin - end]
+	//0.05
+	uvx -= begin;
+	// normalize between [0,1]
+	//0.5
+	uvx /= (end-begin);
+	// put the range between [0, endText-beginText]
+	// 0.1
+	uvx *= (endText - beginText);
+	// put the range between [beginText, endText]
+	//0.9
+	uvx += beginText;
+	return uvx;
+}
+
+void fragment()
+{
+	float dist_offset = 100.0;
+	float dist_offset2 = dist_offset*2.0;
+	
+	float range_uv = 0.0;
+	
+	float offset = 0.0;
+	
+	vec4 color;
+	
+//	if(l_total < dist_offset)
+//	{
+//		offset = 0.1;
+//		range_uv = 0.1;
+//		color = vec4(0.0,1.0,0.0, 1.0);
+//	}
+//	else if(l_total < dist_offset2)
+//	{
+//		offset = 0.05;
+//		range_uv = 0.;
+//		color = vec4(0.0,1.0,0.0, 1.0);
+//	}
+	if(l_total > 0.0)
+	{
+		range_uv = dist_offset / l_total;
+		offset = range_uv;		
+	
+		float begin = offset;
+		float end = 1.0 - offset;
+		vec2 uv = UV;
+		
+		if(uv.x <= begin)
+		{
+			uv.x = mapTextureRange(uv.x, 0.0, begin, 0.0, 0.3);
+		}
+		else if(uv.x >= end)
+		{
+			uv.x = mapTextureRange(uv.x, end, 1.0, 0.7, 1.0);
+		}
+		else
+		{
+			float range_uv_i = floor(uv.x/range_uv);
+			uv.x = mapTextureRange(uv.x, range_uv_i * range_uv, (range_uv_i+1.0) * range_uv, 0.4, 0.6);
+		}
+		
+		COLOR = texture(TEXTURE, uv);
+	}
+	
+}"
+
+[sub_resource type="ShaderMaterial" id=8]
+shader = SubResource( 7 )
+shader_param/l_total = null
 
 [sub_resource type="Gradient" id=2]
 colors = PoolColorArray( 0, 0, 0, 1, 1, 1, 1, 0 )
@@ -53,12 +132,13 @@ color_ramp = SubResource( 3 )
 script = SubResource( 1 )
 
 [node name="Line2D" type="Line2D" parent="."]
-points = PoolVector2Array( 324, 14 )
+material = SubResource( 8 )
+width = 20.0
 default_color = Color( 0, 0, 0, 1 )
-texture_mode = 53
+texture = ExtResource( 1 )
+texture_mode = 2
 joint_mode = 2
-begin_cap_mode = 2
-script = ExtResource( 1 )
+script = ExtResource( 2 )
 
 [node name="AudioNode" type="Node2D" parent="Line2D"]
 
@@ -72,4 +152,4 @@ amount = 6
 lifetime = 3.0
 local_coords = false
 process_material = SubResource( 6 )
-texture = ExtResource( 2 )
+texture = ExtResource( 3 )

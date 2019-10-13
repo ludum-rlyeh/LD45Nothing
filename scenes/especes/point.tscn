@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://assets/shape/round.png" type="Texture" id=1]
 [ext_resource path="res://scripts/especes/point.gd" type="Script" id=2]
@@ -19,7 +19,7 @@ func _ready():
 	
 	$Shape.connect(\"die_sig\", self, \"_on_die\")
 	
-func build(var points):
+func build(var points, l_total):
 	
 	var box = Utils.getBBox(points)
 	$Drop.position = box.position
@@ -76,6 +76,71 @@ shader_param/radius = null
 flags = 4
 load_path = "res://.import/ink_drop2.png-88af4311e61235e7f0d9588dd7e5f946.stex"
 
+[sub_resource type="Shader" id=5]
+code = "shader_type canvas_item;
+
+uniform float u_time_offset;
+
+vec2 random2(vec2 st){
+    st = vec2( dot(st,vec2(127.1,311.7)),
+              dot(st,vec2(269.5,183.3)) );
+    return -1.0 + 2.0*fract(sin(st)*43758.5453123);
+}
+
+// Value Noise by Inigo Quilez - iq/2013
+// https://www.shadertoy.com/view/lsf3WH
+float noise(vec2 st) {
+    vec2 i = floor(st);
+    vec2 f = fract(st);
+
+    vec2 u = f*f*(3.0-2.0*f);
+
+    return mix( mix( dot( random2(i + vec2(0.0,0.0) ), f - vec2(0.0,0.0) ),
+                     dot( random2(i + vec2(1.0,0.0) ), f - vec2(1.0,0.0) ), u.x),
+                mix( dot( random2(i + vec2(0.0,1.0) ), f - vec2(0.0,1.0) ),
+                     dot( random2(i + vec2(1.0,1.0) ), f - vec2(1.0,1.0) ), u.x), u.y);
+}
+
+float shape(vec2 st, float radius, float time) {
+	// to center coordinates UV
+	st = vec2(0.5)-st;
+    float r = length(st)*2.0;
+    float a = atan(st.y,st.x);
+    float m = abs(mod(a+time*2.,3.14*2.)-3.14)/3.6;
+    float f = radius;
+	
+    m += noise(st+time*0.3)*0.5;
+    f += sin(a*5.)*noise(st+time*.2)*.4;
+    f += (sin(a*5.)*.5*pow(m,2.));
+    return 1.-smoothstep(f,f+0.01,r);
+}
+
+float shapeBorder(vec2 st, float radius, float time) {
+    return shape(st,radius, time);
+}
+
+void fragment() {
+	vec2 st = UV;
+	
+	vec3 color = vec3(1.0) * shapeBorder(st,0.8, TIME);
+	
+	if(color.x < 1.0)
+	{
+		COLOR = vec4(1,1,1,0);
+	}
+	else
+	{
+		COLOR = vec4( 1.-color, 1.0 );
+		
+	}
+
+}
+"
+
+[sub_resource type="ShaderMaterial" id=6]
+shader = SubResource( 5 )
+shader_param/u_time_offset = null
+
 [node name="Node2D" type="Node2D"]
 script = SubResource( 1 )
 
@@ -87,6 +152,7 @@ scale = Vector2( 0.1, 0.1 )
 texture = SubResource( 4 )
 
 [node name="Shape" type="Sprite" parent="."]
+material = SubResource( 6 )
 position = Vector2( -1.16632, 1.16635 )
 scale = Vector2( 0.3, 0.3 )
 texture = ExtResource( 1 )

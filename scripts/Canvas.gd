@@ -2,6 +2,8 @@ extends Node2D
 
 signal _new_boid_sig # to emit with species and points
 
+var THRESHOLD_NEIGHBOURING = 50
+
 func _ready():
 	pass
 
@@ -21,7 +23,7 @@ func recognition(var line2d):
 	var shape = points
 	
 	if shape.size() > 0 :
-		if start_and_end_are_close(shape, 20) :
+		if start_and_end_are_close(shape, THRESHOLD_NEIGHBOURING) :
 			if not_a_lot_of_points(shape, 10) :
 				boid_type = "point";
 			elif has_edges(shape, 3)  :
