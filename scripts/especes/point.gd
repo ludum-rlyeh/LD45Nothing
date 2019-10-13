@@ -13,10 +13,9 @@ var samples = [
 signal die_sig
 
 var MAX_VELOCITY
-var velocity = Vector2(0.0, 0.0)
+var velocity
 
-var attraction_dist = 200
-var separation_dist = 50
+var separation_dist = 80
 
 var OLD_POINT
 var TIME = 0
@@ -43,7 +42,11 @@ func _ready():
 	self.add_to_group("points")
 	
 	var sample = samples[randi() % samples.size()]
-	$Audio.stream = load(sample)	
+	$Audio.stream = load(sample)
+	
+	self.velocity = Vector2(rand_range(-1.0, 1.0), rand_range(-1.0, 1.0))
+	print_debug(self.velocity)
+	
 	
 
 # warning-ignore:unused_argument
@@ -55,8 +58,6 @@ func build(var points) :
 	#get_material().shader = get_material().shader.duplicate()
 	
 	var offset_time = rand_range(-1.0, 1.0)
-	print("offset_time: ", offset_time)
-	print(get_material())
 	get_material().set_shader_param("u_time_offset", offset_time)
 
 func _process(delta) :
@@ -84,10 +85,10 @@ func _process(delta) :
 				if dist <= separation_dist :
 					separation_vec2 = separation_vec2 - (b_pos - self.position)
 					
-		orientation_vec2 /= nb_boids
+		orientation_vec2 /= (nb_boids-1)
 		orientation_vec2 = (orientation_vec2 - self.velocity) / 8.0
 			
-		attraction_vec2 /= nb_boids 
+		attraction_vec2 /= (nb_boids-1) 
 		attraction_vec2 = (attraction_vec2 - self.position) / 100.0
 		
 		self.velocity += attraction_vec2 + orientation_vec2 + separation_vec2
