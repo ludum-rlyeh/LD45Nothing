@@ -16,7 +16,6 @@ var MAX_VELOCITY
 var velocity = Vector2(0.0, 0.0)
 
 var attraction_dist = 200
-var orientation_dist = 180
 var separation_dist = 50
 
 var OLD_POINT
@@ -61,40 +60,34 @@ func build(var points) :
 	get_material().set_shader_param("u_time_offset", offset_time)
 
 func _process(delta) :
-	var boids = get_tree().get_nodes_in_group("points")
 	
 	var attraction_vec2 = Vector2(0.0, 0.0)
 	var orientation_vec2 = Vector2(0.0, 0.0) 
 	var separation_vec2 = Vector2(0.0, 0.0)
-	var n_attract = 0
-	if boids.size() > 1 :
+	
+	var boids = $AttractionArea.get_overlapping_areas()
+	var nb_boids = boids.size()
+	if nb_boids > 1 :
 		
-		var n_orien = 0
 		for boid in boids :
-			if boid != self :
-				var b_pos = boid.position
+			var p_boid = boid.get_parent()
+			if p_boid != self :
+				var b_pos = p_boid.position
 				var dist = b_pos.distance_to(self.position)
 				# Attraction
-				if dist <= attraction_dist :
-					n_attract += 1
-					attraction_vec2 = attraction_vec2 + b_pos
-	
-					# Orientation
-					if dist <= orientation_dist :
-						n_orien += 1
-						orientation_vec2 = orientation_vec2 + boid.velocity
-	
-						# separation
-						if dist <= separation_dist :
-							separation_vec2 = separation_vec2 - (b_pos - self.position)
-		
-		if n_orien != 0 :
-			orientation_vec2 /= n_orien
-			orientation_vec2 = (orientation_vec2 - self.velocity) / 8.0
-	
-	
-	if n_attract != 0 :
-		attraction_vec2 /= n_attract 
+				attraction_vec2 = attraction_vec2 + b_pos
+				
+				# Orientation
+				orientation_vec2 = orientation_vec2 + p_boid.velocity
+				
+				# separation
+				if dist <= separation_dist :
+					separation_vec2 = separation_vec2 - (b_pos - self.position)
+					
+		orientation_vec2 /= nb_boids
+		orientation_vec2 = (orientation_vec2 - self.velocity) / 8.0
+			
+		attraction_vec2 /= nb_boids 
 		attraction_vec2 = (attraction_vec2 - self.position) / 100.0
 		
 		self.velocity += attraction_vec2 + orientation_vec2 + separation_vec2
@@ -116,3 +109,4 @@ func limit_velocity(var velocity) :
 	if velocity.length() > MAX_VELOCITY :
 		velocity = (velocity / velocity.length()) * MAX_VELOCITY 
 	return velocity
+
