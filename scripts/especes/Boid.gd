@@ -26,7 +26,6 @@ func _ready():
 	var sample = samples[randi() % samples.size()]
 	$Audio.stream = load(sample)
 	
-#	build([Vector2(100,100), Vector2(150,100), Vector2(150,150), Vector2(100,150)])
 
 func build(var points, l_total):
 	
