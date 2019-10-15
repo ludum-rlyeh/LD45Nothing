@@ -101,12 +101,6 @@ func mouvement_3(delta, attraction) :
 #	POINTS.append(POINTS[-1] + (new_offset * DISTANCE/AMPLITUDE * 0.7))
 #	self.set_points(POINTS)
 
-
-
-
-		
-		
-
 func build(points, l_total) :
 #	POINTS = []
 #	POINTS.append(points[0])
@@ -121,18 +115,9 @@ func build(points, l_total) :
 #			POINTS.append(POINTS[-1] + direction)
 #		POINTS.append(points[i+1])
 
-#	self.set_points(POINTS)
-#	points = [Vector2(100,100), Vector2(200, 100), Vector2(200, 200)]
-	self.set_points(points)
-	
-#	_path_follower = PathFollower.new(points)
 
+	self.set_points(points)
 	_path_follower = PathFollower.new(self)
-	
-#	_path_follower.move(Vector2(-50, 0))
-#	_path_follower.move(Vector2(-50, 0))
-#	_path_follower.move(Vector2(-50, 0))
-	
 	
 #	OLD_POSITION = self.points[-1]
 
@@ -179,15 +164,12 @@ func _process(delta):
 	
 	var attraction = Vector2(0.0,0.0)
 	if distance_min_to_point < DISTANCE_ATTRACTION :
-		attraction = (nearest_point.position - POINTS[-1]).normalized()
+		attraction = (nearest_point.position - self.points[-1]).normalized()
 	
 	#mouvement_2(delta)
 	var displacement = mouvement_3(delta, attraction)
-	#print(displacement)
 	_path_follower.move(displacement)
-	#print(self.points[-1])
+
 	$AudioNode.position = self.points[-1]
 	
 	$Particles2D.set_position(points[0])
-
-	#mouv()
