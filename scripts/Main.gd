@@ -34,7 +34,6 @@ func add_boid(var boid_type, var line2d, var points):
 #	var viewport = $Viewport
 #	viewport.render_target_clear_mode = Viewport.CLEAR_MODE_NEVER
 	var boid = null
-	print_debug(boid_type)
 	
 	match boid_type :
 		"point":
