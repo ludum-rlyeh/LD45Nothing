@@ -3,6 +3,9 @@ extends Node
 var THRESHOLD_ANGLE_SAME_SLOPE = 0.8
 var DIST_SAME_POINT = 10
 
+func reverse_index(i, size):
+	return size - i - 1
+
 func process_normal_3_points(var i, var pts):
 	var v = pts[i] - pts[i+1]
 	var n1 = Vector2(-v.y, v.x)

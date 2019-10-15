@@ -23,6 +23,9 @@ var DISTANCE_EAT = 5.0
 
 var VIEWPORT_SIZE
 
+var PathFollower = preload("res://scripts/PathFollower.gd")
+var _path_follower
+
 func mouv():
 	POINTS.append(POINTS[-1]+Vector2(15.0,0))
 	POINTS.remove(0)
@@ -67,7 +70,6 @@ func mouvement_3(delta, attraction) :
 		while (abs(new_direction.angle_to(DIRECTION)) > 1.0) :
 			new_direction = Vector2(randf() * pow(-1,randi()%2), randf() * pow(-1,randi()%2)).normalized()
 			
-		
 		DIRECTION = new_direction
 	
 	if attraction.length() > 0.0 && TIME_ATTRACTION > 0.50:
@@ -91,27 +93,47 @@ func mouvement_3(delta, attraction) :
 	
 	var new_offset = (Vector2(DIRECTION[1] * -1.0, DIRECTION[0]) * sin(TIME*NUMBER_SLOOPS) * AMPLITUDE + DIRECTION)
 	
+	var displacement = new_offset * DISTANCE/AMPLITUDE * 0.7
 	
-	POINTS.remove(0)
-	POINTS.append(POINTS[-1] + (new_offset * DISTANCE/AMPLITUDE * 0.7))
-	self.set_points(POINTS)
+	return displacement
+	
+#	POINTS.remove(0)
+#	POINTS.append(POINTS[-1] + (new_offset * DISTANCE/AMPLITUDE * 0.7))
+#	self.set_points(POINTS)
+
+
+
+
+		
+		
 
 func build(points, l_total) :
-#	POINTS = points
-	POINTS = []
-	POINTS.append(points[0])
-	var distance = 0.0
-	var direction
-	for i in range(0,points.size() - 1) :
-		distance = points[i].distance_to(points[i+1])
-		distance = int(distance)
-		direction = (points[i+1] - points[i]).normalized() * DISTANCE
-		for d in range(0,distance) :
-			#POINTS.append(points[-1])
-			POINTS.append(POINTS[-1] + direction)
-		POINTS.append(points[i+1])
-		
-	self.set_points(POINTS)
+#	POINTS = []
+#	POINTS.append(points[0])
+#	var distance = 0.0
+#	var direction
+#	for i in range(0,points.size() - 1) :
+#		distance = points[i].distance_to(points[i+1])
+#		distance = int(distance)
+#		direction = (points[i+1] - points[i]).normalized() * DISTANCE
+#		for d in range(0,distance) :
+#			#POINTS.append(points[-1])
+#			POINTS.append(POINTS[-1] + direction)
+#		POINTS.append(points[i+1])
+
+#	self.set_points(POINTS)
+#	points = [Vector2(100,100), Vector2(200, 100), Vector2(200, 200)]
+	self.set_points(points)
+	
+#	_path_follower = PathFollower.new(points)
+
+	_path_follower = PathFollower.new(self)
+	
+#	_path_follower.move(Vector2(-50, 0))
+#	_path_follower.move(Vector2(-50, 0))
+#	_path_follower.move(Vector2(-50, 0))
+	
+	
 #	OLD_POSITION = self.points[-1]
 
 	$Particles2D.set_position(points[0])
@@ -136,9 +158,6 @@ func _ready():
 #	self.set_points(points)
 #
 #	build(points)
-	
-	
-	pass # Replace with function body.
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -163,7 +182,10 @@ func _process(delta):
 		attraction = (nearest_point.position - POINTS[-1]).normalized()
 	
 	#mouvement_2(delta)
-	mouvement_3(delta, attraction)
+	var displacement = mouvement_3(delta, attraction)
+	#print(displacement)
+	_path_follower.move(displacement)
+	#print(self.points[-1])
 	$AudioNode.position = self.points[-1]
 	
 	$Particles2D.set_position(points[0])
