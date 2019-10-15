@@ -24,7 +24,7 @@ func _ready():
 #	pass
 "
 
-[sub_resource type="Shader" id=7]
+[sub_resource type="Shader" id=2]
 code = "shader_type canvas_item;
 
 uniform float l_total;
@@ -98,24 +98,24 @@ void fragment()
 	
 }"
 
-[sub_resource type="ShaderMaterial" id=8]
-shader = SubResource( 7 )
+[sub_resource type="ShaderMaterial" id=3]
+shader = SubResource( 2 )
 shader_param/l_total = null
 
-[sub_resource type="Gradient" id=2]
+[sub_resource type="Gradient" id=4]
 colors = PoolColorArray( 0, 0, 0, 1, 1, 1, 1, 0 )
 
-[sub_resource type="GradientTexture" id=3]
-gradient = SubResource( 2 )
+[sub_resource type="GradientTexture" id=5]
+gradient = SubResource( 4 )
 
-[sub_resource type="Curve" id=4]
+[sub_resource type="Curve" id=6]
 max_value = 0.25
 _data = [ Vector2( 0.0174372, 0.1866 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.0326 ), 0.0, 0.0, 0, 0 ]
 
-[sub_resource type="CurveTexture" id=5]
-curve = SubResource( 4 )
+[sub_resource type="CurveTexture" id=7]
+curve = SubResource( 6 )
 
-[sub_resource type="ParticlesMaterial" id=6]
+[sub_resource type="ParticlesMaterial" id=8]
 emission_shape = 1
 emission_sphere_radius = 5.0
 flag_disable_z = true
@@ -125,14 +125,14 @@ orbit_velocity = 0.0
 orbit_velocity_random = 0.0
 scale = 0.01
 scale_random = 0.05
-scale_curve = SubResource( 5 )
-color_ramp = SubResource( 3 )
+scale_curve = SubResource( 7 )
+color_ramp = SubResource( 5 )
 
 [node name="Node2D" type="Node2D"]
 script = SubResource( 1 )
 
 [node name="Line2D" type="Line2D" parent="."]
-material = SubResource( 8 )
+material = SubResource( 3 )
 width = 20.0
 default_color = Color( 0, 0, 0, 1 )
 texture = ExtResource( 1 )
@@ -151,5 +151,5 @@ position = Vector2( 1.16632, -1.16635 )
 amount = 6
 lifetime = 3.0
 local_coords = false
-process_material = SubResource( 6 )
+process_material = SubResource( 8 )
 texture = ExtResource( 3 )

@@ -32,22 +32,19 @@ func recognition(var line2d):
 				boid_type = "square"
 			else:
 				boid_type = "circle";
-			
-			emit_signal("_new_boid_sig", boid_type, line2d, shape)
-			
 		else:
 #			if(shape.size() > 400):
 #				line2d.call_deferred("queue_free")
 #				return
 			#	print(points.size())
-			var shapes = Utils.split_in_subarrays(points, 15)
-			for shape2 in shapes:
-				if in_box(shape2, 0.9) :
-					boid_type = "line";
-				else :
-					boid_type = "snake";
+#			var shapes = Utils.split_in_subarrays(points, 15)
+#			for shape2 in shapes:
+			if in_box(points, 0.9) :
+				boid_type = "line";
+			else :
+				boid_type = "snake";
 		
-				emit_signal("_new_boid_sig", boid_type, line2d, shape2)
+		emit_signal("_new_boid_sig", boid_type, line2d, shape)
 	
 
 func start_and_end_are_close(var points, var max_dist) :

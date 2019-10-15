@@ -3,10 +3,8 @@ extends Control
 var canvas
 var viewport
 
-var bg
-
+#var bg
 var ressource = preload("res://assets/BG.jpg")
-
 
 func _ready():
 	viewport = $ViewportContainer/Viewport
@@ -15,8 +13,8 @@ func _ready():
 	randomize()
 	canvas.connect("_new_boid_sig", self, "_on_new_boid")
 	
-	bg = ImageTexture.new()
-	bg.create_from_image(ressource.get_data())
+#	bg = ImageTexture.new()
+#	bg.create_from_image(ressource.get_data())
 	
 #	$ViewportContainer.material.set_shader_param("BGTexture", bg)
 	
