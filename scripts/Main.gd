@@ -3,8 +3,12 @@ extends Control
 var canvas
 var viewport
 
-#var bg
-var ressource = preload("res://assets/BG.jpg")
+var Point = preload("res://scenes/especes/point.tscn")
+var Bascule = preload("res://scenes/especes/bascule.tscn")
+var Boid = preload("res://scenes/especes/Boid.tscn")
+var Triangle = preload("res://scenes/especes/Triangle2.tscn")
+var Square = preload("res://scenes/especes/Square.tscn")
+var Serpentin = preload("res://scenes/especes/Serpentin.tscn")
 
 func _ready():
 	viewport = $ViewportContainer/Viewport
@@ -12,11 +16,6 @@ func _ready():
 	
 	randomize()
 	canvas.connect("_new_boid_sig", self, "_on_new_boid")
-	
-#	bg = ImageTexture.new()
-#	bg.create_from_image(ressource.get_data())
-	
-#	$ViewportContainer.material.set_shader_param("BGTexture", bg)
 	
 	set_process_input(true)
 
@@ -29,23 +28,21 @@ func _on_new_boid(var boid_type, var line2d, var points):
 	
 
 func add_boid(var boid_type, var line2d, var points):
-#	var viewport = $Viewport
-#	viewport.render_target_clear_mode = Viewport.CLEAR_MODE_NEVER
 	var boid = null
 	
 	match boid_type :
 		"point":
-			boid = preload("res://scenes/especes/point.tscn").instance()
+			boid = Point.instance()
 		"line":
-			boid = preload("res://scenes/especes/bascule.tscn").instance()
+			boid = Bascule.instance()
 		"circle":
-			boid = preload("res://scenes/especes/Boid.tscn").instance()
+			boid = Boid.instance()
 		"triangle":
-			boid = preload("res://scenes/especes/Triangle2.tscn").instance()
+			boid = Triangle.instance()
 		"square":
-			boid = preload("res://scenes/especes/Square.tscn").instance()
+			boid = Square.instance()
 		"snake":
-			boid = preload("res://scenes/especes/Serpentin.tscn").instance()
+			boid = Serpentin.instance()
 		
 	if boid != null :
 		boid.build(points, line2d.l_total)

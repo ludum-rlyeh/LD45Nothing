@@ -33,12 +33,6 @@ func recognition(var line2d):
 			else:
 				boid_type = "circle";
 		else:
-#			if(shape.size() > 400):
-#				line2d.call_deferred("queue_free")
-#				return
-			#	print(points.size())
-#			var shapes = Utils.split_in_subarrays(points, 15)
-#			for shape2 in shapes:
 			if in_box(points, 0.9) :
 				boid_type = "line";
 			else :
