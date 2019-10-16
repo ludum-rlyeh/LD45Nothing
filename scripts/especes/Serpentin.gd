@@ -149,10 +149,11 @@ func _ready():
 func _process(delta):
 	var distance_min_to_point = DISTANCE_ATTRACTION + 1.0
 	var nearest_point 
-	var points_node = get_tree().get_nodes_in_group("points")
+	var points_node = $Area2D.get_overlapping_areas()
 	var dist = DISTANCE_ATTRACTION + 1.0
 
-	for p in points_node :
+	for pn in points_node :
+		var p = pn.get_parent()
 		dist = self.points[-1].distance_to(p.position)
 		if dist < DISTANCE_EAT :
 			p.die()
@@ -171,5 +172,6 @@ func _process(delta):
 	_path_follower.move(displacement)
 
 	$AudioNode.position = self.points[-1]
+	$Area2D.position = self.points[-1]
 	
 	$Particles2D.set_position(points[0])

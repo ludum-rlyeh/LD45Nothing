@@ -45,7 +45,6 @@ func _ready():
 	$Audio.stream = load(sample)
 	
 	self.velocity = Vector2(rand_range(-1.0, 1.0), rand_range(-1.0, 1.0))
-	print_debug(self.velocity)
 	
 	
 

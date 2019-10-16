@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://assets/ink/hiclipart.com-id_iioqm.png" type="Texture" id=1]
 [ext_resource path="res://scripts/especes/Serpentin.gd" type="Script" id=2]
@@ -116,6 +116,9 @@ scale_random = 0.05
 scale_curve = SubResource( 7 )
 color_ramp = SubResource( 5 )
 
+[sub_resource type="CircleShape2D" id=9]
+radius = 100.0
+
 [node name="Node2D" type="Node2D"]
 script = SubResource( 1 )
 
@@ -141,3 +144,9 @@ lifetime = 3.0
 local_coords = false
 process_material = SubResource( 8 )
 texture = ExtResource( 3 )
+
+[node name="Area2D" type="Area2D" parent="Line2D"]
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Line2D/Area2D"]
+shape = SubResource( 9 )
