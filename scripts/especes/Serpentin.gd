@@ -1,12 +1,12 @@
 extends Line2D
 
-var samples = [
-	"res://assets/sounds/shakuhachiEaigu.ogg",
-	"res://assets/sounds/shakuhachiD.ogg",
-	"res://assets/sounds/shakuhachiB.ogg",
-	"res://assets/sounds/shakuhachiA.ogg",
-	"res://assets/sounds/shakuhachiG.ogg",
-	"res://assets/sounds/shakuhachiEgrave.ogg"
+var pitches = [
+	1.0, # same note
+	1.2,  # minor third
+	1.33, # perfect four
+	1.5, # perfect fifth
+	1.77, # minor seventh
+	2.0 # perfect octave
 ]
 
 var POINTS
@@ -124,8 +124,6 @@ func build(points, l_total) :
 	$Particles2D.set_position(points[0])
 	
 	$AudioNode.position = self.points[-1]
-	var sample = samples[randi()%samples.size()]
-	$AudioNode/Audio.stream = load(sample)
 	
 	VIEWPORT_SIZE = Utils.Viewport_dimensions()
 	
@@ -134,6 +132,8 @@ func build(points, l_total) :
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
+	
+	$AudioNode/Audio.pitch_scale = pitches[randi() % pitches.size()]
 	
 #	var points = PoolVector2Array([Vector2(100.0,100.0), Vector2(130.0,100.0), Vector2(145.0,100.0), Vector2(160.0,100.0), Vector2(175.0,100.0), Vector2(190.0,100.0)])
 #	var array = []
