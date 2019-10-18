@@ -1,10 +1,10 @@
 extends Node2D
 
 var samples = [
-	"res://assets/sounds/guitarD.ogg",
-	"res://assets/sounds/guitarDontKnow.ogg",
+	"res://assets/sounds/guitarG.ogg",
 	"res://assets/sounds/guitarEm.ogg",
-	"res://assets/sounds/guitarG.ogg"
+	"res://assets/sounds/guitarDontKnow.ogg",
+	"res://assets/sounds/guitarD.ogg",
 ]
 
 var SPEED = 0.5
@@ -25,9 +25,6 @@ func _ready():
 	randomize()
 	self.add_to_group("triangle")
 	
-	# set ramdom sound
-	var sample = samples[randi() % samples.size()]
-	$Audio.stream = load(sample)
 	
 #	build([Vector2(100,100), Vector2(150,150), Vector2(200,200), Vector2(150,200), Vector2(100,200), Vector2(100,150), Vector2(100,100)], 300.0)
 
@@ -35,6 +32,12 @@ func build(var points, var material):
 	
 	var rect = Utils.getBBox(points)
 	self.size = rect.size
+	
+	# set ramdom sound 
+	var id = round((size.x * size.y) / 20000)
+	if id >= samples.size() :
+		id = samples.size() - 1
+	$Audio.stream = load(samples[id])
 	
 	self.position = rect.position
 	

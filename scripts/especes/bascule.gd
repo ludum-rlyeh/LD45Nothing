@@ -6,12 +6,12 @@ var samples = [
 ]
 
 var pitches = [
-	1.0, # same note
-	1.2,  # minor third
-	1.33, # perfect four
-	1.5, # perfect fifth
+	2.0, # perfect octave
 	1.77, # minor seventh
-	2.0 # perfect octave
+	1.5, # perfect fifth
+	1.33, # perfect four
+	1.2,  # minor third
+	1.0, # same note
 ]
 
 var MIN_ANGLE = 90
@@ -45,8 +45,7 @@ func _ready():
 	randomize()
 	var sample = samples[randi() % samples.size()]
 	$Audio.stream = load(sample)
-	$Audio.pitch_scale = pitches[randi() % pitches.size()]
-	$Audio.play()
+	
 	
 func _process(delta):
 	move(delta)
@@ -73,6 +72,13 @@ func build(shape, material):
 	VIEWPORT_SIZE = Utils.Viewport_dimensions()
 	
 	set_material(material.duplicate())
+	
+	# set audio
+	var id = round(get_size(points) / 250)
+	if id >= pitches.size() :
+		id = pitches.size() - 1
+	$Audio.pitch_scale = pitches[id]
+	$Audio.play()
 #	get_material().set_shader_param("l_total", l_total)
 	
 func move(delta):
@@ -164,3 +170,10 @@ func random_direction():
 	if n == 1:
 		return -1
 	return 1
+
+func get_size(var points) :
+	var size = 0
+	for i in range(0, points.size() - 1):
+		var vect = points[i+1] - points[i]
+		size += vect.length()
+	return size

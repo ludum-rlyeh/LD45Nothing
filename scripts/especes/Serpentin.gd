@@ -1,12 +1,12 @@
 extends Line2D
 
 var pitches = [
-	1.0, # same note
-	1.2,  # minor third
-	1.33, # perfect four
-	1.5, # perfect fifth
+	2.0, # perfect octave
 	1.77, # minor seventh
-	2.0 # perfect octave
+	1.5, # perfect fifth
+	1.33, # perfect four
+	1.2,  # minor third
+	1.0, # same note
 ]
 
 var POINTS
@@ -101,40 +101,37 @@ func mouvement_3(delta, attraction) :
 #	POINTS.append(POINTS[-1] + (new_offset * DISTANCE/AMPLITUDE * 0.7))
 #	self.set_points(POINTS)
 
+func get_size(var points) :
+	var size = 0
+	for i in range(0, points.size() - 1):
+		var vect = points[i+1] - points[i]
+		size += vect.length()
+	return size
+
 func build(points, material) :
-#	POINTS = []
-#	POINTS.append(points[0])
-#	var distance = 0.0
-#	var direction
-#	for i in range(0,points.size() - 1) :
-#		distance = points[i].distance_to(points[i+1])
-#		distance = int(distance)
-#		direction = (points[i+1] - points[i]).normalized() * DISTANCE
-#		for d in range(0,distance) :
-#			#POINTS.append(points[-1])
-#			POINTS.append(POINTS[-1] + direction)
-#		POINTS.append(points[i+1])
-
-
+	
 	self.set_points(points)
 	_path_follower = PathFollower.new(self)
 	
-#	OLD_POSITION = self.points[-1]
-
 	$Particles2D.set_position(points[0])
 	
+	
+	# set audio
+	var id = round(get_size(points) / 250)
+	if id >= pitches.size() :
+		id = pitches.size() - 1
+	$AudioNode/Audio.pitch_scale = pitches[id]
 	$AudioNode.position = self.points[-1]
 	
 	VIEWPORT_SIZE = Utils.Viewport_dimensions()
 	
 	set_material(material.duplicate())
-#	get_material().set_shader_param("l_total", l_total)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
 	
-	$AudioNode/Audio.pitch_scale = pitches[randi() % pitches.size()]
+	
 	
 #	var points = PoolVector2Array([Vector2(100.0,100.0), Vector2(130.0,100.0), Vector2(145.0,100.0), Vector2(160.0,100.0), Vector2(175.0,100.0), Vector2(190.0,100.0)])
 #	var array = []

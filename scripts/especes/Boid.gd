@@ -4,10 +4,10 @@ var deformation_coefs = []
 var normals = []
 
 var samples = [
-	"res://assets/sounds/shamisenD.ogg",
-	"res://assets/sounds/shamisenDontKnow.ogg",
+	"res://assets/sounds/shamisenG.ogg",
 	"res://assets/sounds/shamisenEm.ogg",
-	"res://assets/sounds/shamisenG.ogg"
+	"res://assets/sounds/shamisenDontKnow.ogg",
+	"res://assets/sounds/shamisenD.ogg"
 ]
 
 var SPEED = 0.5
@@ -24,15 +24,18 @@ func _ready():
 	randomize()
 	self.add_to_group("boids")
 	
-	# set ramdom sound
-	var sample = samples[randi() % samples.size()]
-	$Audio.stream = load(sample)
 	
 
 func build(var points, var material):
 	
 	var rect = Utils.getBBox(points)
 	size = rect.size
+	
+	# set ramdom sound 
+	var id = round((size.x * size.y) / 20000)
+	if id >= samples.size() :
+		id = samples.size() - 1
+	$Audio.stream = load(samples[id])
 	
 	self.position = rect.position
 	OLD_POINT = self.position - Vector2(randf() * pow(-1,randi()%2),randf() * pow(-1,randi()%2)).normalized()

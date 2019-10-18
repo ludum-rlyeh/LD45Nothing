@@ -88,8 +88,11 @@ void fragment()
 shader = SubResource( 1 )
 shader_param/l_total = null
 
-[node name="Square" index="0" instance=ExtResource( 1 )]
+[node name="Square" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
+
+[node name="Audio" parent="." index="0"]
+stream = null
 
 [node name="Shape" parent="." index="2"]
 material = SubResource( 2 )

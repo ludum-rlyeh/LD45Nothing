@@ -1,9 +1,8 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://assets/ink/hiclipart.com-id_iioqm.png" type="Texture" id=1]
 [ext_resource path="res://scripts/especes/Serpentin.gd" type="Script" id=2]
-[ext_resource path="res://assets/sounds/shakuhachiEgrave.ogg" type="AudioStream" id=3]
-[ext_resource path="res://assets/shape/ink_drop.png" type="Texture" id=4]
+[ext_resource path="res://assets/shape/ink_drop.png" type="Texture" id=3]
 
 [sub_resource type="GDScript" id=1]
 resource_name = "Serpentin"
@@ -135,7 +134,6 @@ script = ExtResource( 2 )
 [node name="AudioNode" type="Node2D" parent="Line2D"]
 
 [node name="Audio" type="AudioStreamPlayer2D" parent="Line2D/AudioNode"]
-stream = ExtResource( 3 )
 autoplay = true
 bus = "shakuhachi"
 
@@ -145,7 +143,7 @@ amount = 6
 lifetime = 3.0
 local_coords = false
 process_material = SubResource( 8 )
-texture = ExtResource( 4 )
+texture = ExtResource( 3 )
 
 [node name="Area2D" type="Area2D" parent="Line2D"]
 monitorable = false

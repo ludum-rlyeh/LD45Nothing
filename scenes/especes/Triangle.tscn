@@ -6,7 +6,10 @@
 [node name="Triangle" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
-[node name="Tween2" type="Tween" parent="." index="3"]
+[node name="Audio" parent="." index="0"]
+stream = null
 
-[node name="Shape" parent="." index="4"]
+[node name="Shape" parent="." index="2"]
 default_color = Color( 0, 0, 0, 0.509804 )
+
+[node name="Tween2" type="Tween" parent="." index="3"]

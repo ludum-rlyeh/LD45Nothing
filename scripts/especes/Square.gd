@@ -1,10 +1,10 @@
 extends Node2D
 
 var samples = [
-	"res://assets/sounds/kotoD.ogg",
+	"res://assets/sounds/kotoG.ogg",
 	"res://assets/sounds/kotoDontKnow.ogg",
 	"res://assets/sounds/kotoEm.ogg",
-	"res://assets/sounds/kotoG.ogg"
+	"res://assets/sounds/kotoD.ogg",
 ]
 
 var SPEED = 0.5
@@ -22,14 +22,19 @@ func _ready():
 	randomize()
 	self.add_to_group("square")
 	
-	# set ramdom sound
-	var sample = samples[randi() % samples.size()]
-	$Audio.stream = load(sample)
+	
 
 func build(var points, var material):
 	
 	var rect = Utils.getBBox(points)
 	self.size = rect.size
+	
+	# set ramdom sound 
+	var id = round((size.x * size.y) / 20000)
+	if id >= samples.size() :
+		id = samples.size() - 1
+	print_debug(id)
+	$Audio.stream = load(samples[id])
 	
 #	self.position = rect.position
 	self.position = rect.position + rect.size / 2.0 
