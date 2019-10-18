@@ -53,7 +53,7 @@ func _process(delta):
 
 		
 
-func build(shape, l_total):
+func build(shape, material):
 	var offset = shape[0]
 	OFFSET = offset
 	var pts2 = []
@@ -72,7 +72,8 @@ func build(shape, l_total):
 		
 	VIEWPORT_SIZE = Utils.Viewport_dimensions()
 	
-	get_material().set_shader_param("l_total", l_total)
+	set_material(material.duplicate())
+#	get_material().set_shader_param("l_total", l_total)
 	
 func move(delta):
 	var angleInDeg = direction * SPEED_ANGLE * delta
