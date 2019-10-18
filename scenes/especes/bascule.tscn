@@ -4,7 +4,7 @@
 [ext_resource path="res://scripts/especes/bascule.gd" type="Script" id=2]
 [ext_resource path="res://assets/sounds/bell02.wav" type="AudioStream" id=3]
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
 
 #func _ready():
@@ -17,7 +17,7 @@ func build(points, l_total):
 	
 	set_position(points[0])"
 
-[sub_resource type="Shader" id=1]
+[sub_resource type="Shader" id=2]
 code = "shader_type canvas_item;
 
 uniform float l_total;
@@ -98,8 +98,8 @@ void fragment()
 	COLOR = color;
 }"
 
-[sub_resource type="ShaderMaterial" id=10]
-shader = SubResource( 1 )
+[sub_resource type="ShaderMaterial" id=3]
+shader = SubResource( 2 )
 shader_param/l_total = null
 
 [sub_resource type="Gradient" id=4]
@@ -133,10 +133,10 @@ flags = 4
 load_path = "res://.import/ink_drop.png-23b73eaeb1d7019ab7ff2466a54fb1a4.stex"
 
 [node name="Bascule" type="Node2D"]
-script = SubResource( 2 )
+script = SubResource( 1 )
 
 [node name="Shape" type="Line2D" parent="."]
-material = SubResource( 10 )
+material = SubResource( 3 )
 width = 20.0
 default_color = Color( 0, 0, 0, 1 )
 texture = ExtResource( 1 )

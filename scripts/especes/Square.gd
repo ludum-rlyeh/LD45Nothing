@@ -11,6 +11,7 @@ var SPEED = 0.5
 var OLD_POINT
 var TIME = 0
 
+var size
 
 var scale_factor = Vector2(1.0, 1.0)
 var TIME_SCALE_ANIMATION = 1.0
@@ -28,10 +29,10 @@ func _ready():
 func build(var points, l_total):
 	
 	var rect = Utils.getBBox(points)
-	var barycentre = Utils.get_barycenter(points)
+	self.size = rect.size
 	
 #	self.position = rect.position
-	self.position = barycentre
+	self.position = rect.position + rect.size / 2.0 
 	OLD_POINT = self.position - Vector2(randf() * pow(-1,randi()%2),randf() * pow(-1,randi()%2)).normalized()
 	
 	var n_points = PoolVector2Array()
@@ -50,8 +51,6 @@ func build(var points, l_total):
 	$Tween2.start()
 	
 	ROTATION = pow(-1,randi()%2) * PI/2.0 * randf()
-	
-	print("l_total", l_total)
 	
 	$Shape.get_material().set_shader_param("l_total", l_total)
 

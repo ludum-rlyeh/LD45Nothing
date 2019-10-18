@@ -17,6 +17,8 @@ var velocity
 
 var separation_dist = 80
 
+var size = Vector2(100,100) # x: height and y: width
+
 var OLD_POINT
 var TIME = 0
 

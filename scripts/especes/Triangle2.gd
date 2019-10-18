@@ -11,6 +11,8 @@ var SPEED = 0.5
 var OLD_POINT
 var TIME = 0
 
+var size
+
 var scale_factor = Vector2(1.0, 1.0)
 var TIME_SCALE_ANIMATION = 1.0
 
@@ -32,6 +34,7 @@ func _ready():
 func build(var points, l_total):
 	
 	var rect = Utils.getBBox(points)
+	self.size = rect.size
 	
 	self.position = rect.position
 	
