@@ -4,31 +4,35 @@ signal _new_boid_sig # to emit with species and points
 
 var THRESHOLD_NEIGHBOURING = 50
 
+var PENCIL_SCENE = preload("res://scenes/Pencil.tscn")
+var _pencil = PENCIL_SCENE.instance()
+
 func _ready():
-	pass
-
-func _process(delta):
-	if Input.is_action_just_pressed("draw"):
-		var pencil = preload("res://scenes/Pencil.tscn").instance()
-		pencil.connect("_new_shape_sig", self, "_on_new_shape") 
-		add_child(pencil)
-
-func _on_new_shape(var line2d):
-	call_deferred("recognition", line2d)
-
-func recognition(var line2d):
-	var points = Utils.remove_duplicates(line2d.points)
-	var boid_type = null;
+	_pencil.connect("_new_shape_sig", self, "_on_new_shape") 
+	add_child(_pencil)
 	
-	var shape = points
-	
-	if shape.size() > 0 :
-		if start_and_end_are_close(shape, THRESHOLD_NEIGHBOURING) :
-			if not_a_lot_of_points(shape, 10) :
+func _input(event):
+	if event is InputEventMouse:
+		if event.is_action_pressed("draw"):
+			_pencil.start_painting()
+		if Input.is_action_just_released("draw"):
+			_pencil.stop_painting()
+
+func _on_new_shape():
+	var points = Utils.remove_duplicates(_pencil.points)
+	var shape = recognition(points)
+	if shape.boid_type != "":
+		emit_signal("_new_boid_sig", shape.boid_type, shape.points, _pencil.material)
+
+func recognition(var points):	
+	var boid_type = "";
+	if points.size() > 0 :
+		if start_and_end_are_close(points, THRESHOLD_NEIGHBOURING) :
+			if not_a_lot_of_points(points, 10) :
 				boid_type = "point";
-			elif has_edges(shape, 3)  :
+			elif has_edges(points, 3)  :
 				boid_type = "triangle"
-			elif has_edges(shape, 4):
+			elif has_edges(points, 4):
 				boid_type = "square"
 			else:
 				boid_type = "circle";
@@ -38,7 +42,8 @@ func recognition(var line2d):
 			else :
 				boid_type = "snake";
 		
-		emit_signal("_new_boid_sig", boid_type, line2d, shape)
+	return {"boid_type" : boid_type, "points" : points}
+		
 	
 
 func start_and_end_are_close(var points, var max_dist) :
@@ -74,5 +79,3 @@ func has_edges(var points, var n_edges) :
 	var edges = Utils.splitByEdges(points, true)
 	if edges.size() == n_edges :
 		return true
-
-

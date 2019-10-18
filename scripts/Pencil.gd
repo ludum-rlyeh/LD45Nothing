@@ -4,14 +4,16 @@ signal _new_shape_sig
 
 var l_total = 0.0
 
-func _ready():
-	pass
-
-func _process(delta):
-	if Input.is_action_just_released("draw"):
-		$Audio.stop()
-		$Timer.stop()
-		emit_signal("_new_shape_sig", self)
+func start_painting():
+	$Audio.play()
+	$Timer.start()
+	l_total = 0.0
+		
+func stop_painting():
+	$Audio.stop()
+	$Timer.stop()
+	emit_signal("_new_shape_sig")
+	clear_points()
 
 func _on_Timer_timeout():
 	var point = get_global_mouse_position()

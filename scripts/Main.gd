@@ -23,13 +23,13 @@ func _input(event):
 	if event.is_action_pressed("ui_cancel") :
 		get_tree().quit()
 
-func _on_new_boid(var boid_type, var line2d, var points):
-	call_deferred("add_boid", boid_type, line2d, points)
+func _on_new_boid(var boid_type, var points, var material):
+	var boid = create_boid(boid_type, points, material)
+	if boid:
+		add_boid_to_scene(boid)
 	
-
-func add_boid(var boid_type, var line2d, var points):
+func create_boid(var boid_type, var points, var material):
 	var boid = null
-	
 	match boid_type :
 		"point":
 			boid = Point.instance()
@@ -43,9 +43,10 @@ func add_boid(var boid_type, var line2d, var points):
 			boid = Square.instance()
 		"snake":
 			boid = Serpentin.instance()
-		
+			
 	if boid != null :
-		boid.build(points, line2d.l_total)
-		viewport.add_child(boid)
-	
-	line2d.queue_free()
+		boid.build(points, material)
+	return boid
+		
+func add_boid_to_scene(var boid):
+	viewport.add_child(boid)

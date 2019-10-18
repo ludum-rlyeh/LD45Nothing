@@ -9,8 +9,8 @@
 resource_name = "Serpentin"
 script/source = "extends Node2D
 
-func build(var points, var l_total):
-	$Line2D.build(points, l_total)
+func build(var points, var material):
+	$Line2D.build(points, material)
 "
 
 [sub_resource type="Shader" id=2]

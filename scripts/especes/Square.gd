@@ -26,7 +26,7 @@ func _ready():
 	var sample = samples[randi() % samples.size()]
 	$Audio.stream = load(sample)
 
-func build(var points, l_total):
+func build(var points, var material):
 	
 	var rect = Utils.getBBox(points)
 	self.size = rect.size
@@ -52,7 +52,8 @@ func build(var points, l_total):
 	
 	ROTATION = pow(-1,randi()%2) * PI/2.0 * randf()
 	
-	$Shape.get_material().set_shader_param("l_total", l_total)
+#	$Shape.get_material().set_shader_param("l_total", l_total)
+	$Shape.set_material(material.duplicate())
 
 func _process(delta):
 	mouvement_6(delta)

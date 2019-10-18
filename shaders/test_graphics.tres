@@ -4,6 +4,7 @@
 code = "shader_type canvas_item;
 
 uniform float l_total;
+uniform float transparency;
 
 float mapTextureRange(float uvx, float begin, float end, float beginText, float endText)
 {
@@ -70,9 +71,13 @@ void fragment()
 		}
 		
 		vec4 c = texture(TEXTURE, uv);
-		if(uv.y > 0.6 && c.w > 0.1)
+//		if(uv.y > 0.6 && c.w > 0.1)
+//		{
+//			c.w = 1.0 - mix(0.3, 1.0, uv.y);
+//		}
+		if(c.w >= transparency)
 		{
-			c.w = 1.0 - mix(0.3, 1.0, uv.y);
+			c.w = transparency;
 		}
 		COLOR = c;
 	}
@@ -82,3 +87,4 @@ void fragment()
 [resource]
 shader = SubResource( 1 )
 shader_param/l_total = null
+shader_param/transparency = 0.7

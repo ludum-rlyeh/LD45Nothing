@@ -31,7 +31,7 @@ func _ready():
 	
 #	build([Vector2(100,100), Vector2(150,150), Vector2(200,200), Vector2(150,200), Vector2(100,200), Vector2(100,150), Vector2(100,100)], 300.0)
 
-func build(var points, l_total):
+func build(var points, var material):
 	
 	var rect = Utils.getBBox(points)
 	self.size = rect.size
@@ -102,7 +102,8 @@ func build(var points, l_total):
 	
 	$Particles2D.set_position(-NORMAL.normalized()*10)
 	
-	$Shape.get_material().set_shader_param("l_total", l_total)
+	$Shape.set_material(material.duplicate())
+#	$Shape.get_material().set_shader_param("l_total", l_total)
 
 func _process(delta):
 	#mouvement_6(delta)
