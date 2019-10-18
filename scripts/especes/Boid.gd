@@ -29,7 +29,7 @@ func _ready():
 	$Audio.stream = load(sample)
 	
 
-func build(var points, l_total):
+func build(var points, var material):
 	
 	var rect = Utils.getBBox(points)
 	size = rect.size
@@ -47,13 +47,13 @@ func build(var points, l_total):
 		
 	$Shape.set_points(n_points)
 	
-	
 	scale_factor = Vector2(1,1) + Vector2(rand_range(-0.2,0.2), rand_range(-0.2,0.2))
 	$Tween.interpolate_method(self, "set_scale", Vector2(1,1), scale_factor, TIME_SCALE_ANIMATION, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
 	$Tween.connect("tween_completed", self, "scale_animation")
 	$Tween.start()
 	
-	$Shape.get_material().set_shader_param("l_total", l_total)
+	$Shape.set_material(material.duplicate())
+#	$Shape.get_material().set_shader_param("l_total", l_total)
 	
 func scale_animation( object, key):
 	if scale_factor != Vector2(1,1):

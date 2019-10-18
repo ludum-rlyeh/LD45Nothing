@@ -101,7 +101,7 @@ func mouvement_3(delta, attraction) :
 #	POINTS.append(POINTS[-1] + (new_offset * DISTANCE/AMPLITUDE * 0.7))
 #	self.set_points(POINTS)
 
-func build(points, l_total) :
+func build(points, material) :
 #	POINTS = []
 #	POINTS.append(points[0])
 #	var distance = 0.0
@@ -129,7 +129,8 @@ func build(points, l_total) :
 	
 	VIEWPORT_SIZE = Utils.Viewport_dimensions()
 	
-	get_material().set_shader_param("l_total", l_total)
+	set_material(material.duplicate())
+#	get_material().set_shader_param("l_total", l_total)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
