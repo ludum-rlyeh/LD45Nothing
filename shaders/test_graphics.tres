@@ -87,4 +87,4 @@ void fragment()
 [resource]
 shader = SubResource( 1 )
 shader_param/l_total = null
-shader_param/transparency = 0.7
+shader_param/transparency = 0.8

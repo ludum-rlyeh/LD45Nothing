@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://scripts/especes/Boid.gd" type="Script" id=1]
-[ext_resource path="res://assets/sounds/shamisenD.ogg" type="AudioStream" id=2]
+[ext_resource path="res://assets/sounds/shamisenEm.ogg" type="AudioStream" id=2]
 [ext_resource path="res://assets/ink/hiclipart.com-id_iioqm.png" type="Texture" id=3]
 
 [sub_resource type="Shader" id=1]

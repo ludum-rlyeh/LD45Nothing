@@ -28,7 +28,7 @@ func _on_die():
 func die():
 	self.queue_free()"
 
-[sub_resource type="Shader" id=6]
+[sub_resource type="Shader" id=2]
 code = "shader_type canvas_item;
 
 uniform float u_time_offset;
@@ -90,12 +90,12 @@ void fragment() {
 }
 "
 
-[sub_resource type="ShaderMaterial" id=7]
-shader = SubResource( 6 )
+[sub_resource type="ShaderMaterial" id=3]
+shader = SubResource( 2 )
 shader_param/u_time_offset = null
-shader_param/transparency = 0.7
+shader_param/transparency = 1.0
 
-[sub_resource type="CircleShape2D" id=8]
+[sub_resource type="CircleShape2D" id=4]
 radius = 500.0
 
 [sub_resource type="CircleShape2D" id=5]
@@ -104,7 +104,7 @@ radius = 500.0
 script = SubResource( 1 )
 
 [node name="Shape" type="Sprite" parent="."]
-material = SubResource( 7 )
+material = SubResource( 3 )
 position = Vector2( -1.16632, 1.16635 )
 scale = Vector2( 0.3, 0.3 )
 texture = ExtResource( 1 )
@@ -123,7 +123,7 @@ bus = "drum"
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Shape/AttractionArea"]
-shape = SubResource( 8 )
+shape = SubResource( 4 )
 
 [node name="PointArea" type="Area2D" parent="Shape"]
 monitoring = false
