@@ -33,7 +33,6 @@ func build(var points, var material):
 	var id = round((size.x * size.y) / 20000)
 	if id >= samples.size() :
 		id = samples.size() - 1
-	print_debug(id)
 	$Audio.stream = load(samples[id])
 	
 #	self.position = rect.position
