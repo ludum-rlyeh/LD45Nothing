@@ -9,7 +9,7 @@ game.
 
 For a better experience, please use headphone.
 
-And to play our game, it's right [HERE](https://ludum-rlyeh.github.io/LD45Nothing/LD45.html) :)
+And to play our game, it's right [HERE](https://ludum-rlyeh.github.io/LD45Nothing/shuimohua.html) :)
 
 ## Team
 
@@ -23,6 +23,12 @@ And to play our game, it's right [HERE](https://ludum-rlyeh.github.io/LD45Nothin
 
 ## Releases
 
+### More Recent Version
+
+HTML5 : https://ludum-rlyeh.github.io/LD45Nothing/shuimohua.html
+
+### Ludum Dare 45 Version
+
 HTML5 : https://ludum-rlyeh.github.io/LD45Nothing/LD45.html
 
 Windows : https://github.com/ludum-rlyeh/LD45Nothing/releases/download/v0-ludum/LD45_Shuimohua.zip
@@ -30,6 +36,4 @@ Windows : https://github.com/ludum-rlyeh/LD45Nothing/releases/download/v0-ludum/
 
 ## Information
 
-Web release may be slow to start, so wait for it ;)
-
-If audio on Google Chrome doesn't work you may need to press a key.
+**You might like to use Firefox for a better experience with the web link**
