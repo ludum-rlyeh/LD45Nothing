@@ -1,9 +1,9 @@
 [gd_scene load_steps=12 format=2]
 
-[ext_resource path="res://assets/sounds/drum01.ogg" type="AudioStream" id=1]
-[ext_resource path="res://assets/shape/round.png" type="Texture" id=2]
-[ext_resource path="res://scripts/especes/point.gd" type="Script" id=3]
-[ext_resource path="res://particles/trainee_encre.tscn" type="PackedScene" id=4]
+[ext_resource path="res://assets/shape/round.png" type="Texture" id=1]
+[ext_resource path="res://scripts/especes/point.gd" type="Script" id=2]
+[ext_resource path="res://particles/trainee_encre.tscn" type="PackedScene" id=3]
+[ext_resource path="res://assets/sounds/drum01.ogg" type="AudioStream" id=4]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
@@ -31,21 +31,23 @@ var SCALE_PULSE_AUDIO_OFFSET = Vector2(1.0,1.0)
 var TIME_PULSE_AUDIO_SCALE = 1.0/6.0
 
 var shape_sound
+var audio_sound
 
 func _ready():
 	
 	shape_sound = $Shape/Shape2
+	audio_sound = $Shape/Audio
 	
 	_scale_pulse_audio_init = shape_sound.scale
 	_scale_pulse_audio_final = _scale_pulse_audio_init + SCALE_PULSE_AUDIO_OFFSET
 	
 	var sample = samples[randi() % samples.size()]
-	$Audio.stream = load(sample)
+	audio_sound.stream = load(sample)
 	
 	$Shape.connect(\"die_sig\", self, \"_on_die\")
-	$Audio.connect(\"finished\", self, \"_restart_audio\")
+	audio_sound.connect(\"finished\", self, \"_restart_audio\")
 	
-	_time_pulse_audio = $Audio.stream.get_length() * TIME_PULSE_AUDIO_SCALE
+	_time_pulse_audio = audio_sound.stream.get_length() * TIME_PULSE_AUDIO_SCALE
 	_pulse_sound()
 	
 	
@@ -65,7 +67,7 @@ func _pulse_sound():
 	$Tween.interpolate_property(shape_sound, \"scale\", _scale_pulse_audio_init, _scale_pulse_audio_final, _time_pulse_audio, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
 	$Tween.interpolate_property(shape_sound, \"modulate\", Color.white, Color(255, 255, 255, 0), _time_pulse_audio, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
 	$Tween.start()
-	$Audio.play()
+	audio_sound.play()
 	
 func _restart_audio():
 	$Tween.stop_all()
@@ -214,20 +216,14 @@ shader_param/transparency = 1.0
 [node name="Node2D" type="Node2D"]
 script = SubResource( 1 )
 
-[node name="Audio" type="AudioStreamPlayer2D" parent="."]
-position = Vector2( -0.816424, 0.816445 )
-scale = Vector2( 0.3, 0.3 )
-stream = ExtResource( 1 )
-bus = "drum"
-
 [node name="Shape" type="Sprite" parent="."]
 material = SubResource( 3 )
 position = Vector2( -1.16632, 1.16635 )
 scale = Vector2( 0.3, 0.3 )
-texture = ExtResource( 2 )
-script = ExtResource( 3 )
+texture = ExtResource( 1 )
+script = ExtResource( 2 )
 
-[node name="Particles2D" parent="Shape" instance=ExtResource( 4 )]
+[node name="Particles2D" parent="Shape" instance=ExtResource( 3 )]
 emitting = true
 
 [node name="AttractionArea" type="Area2D" parent="Shape"]
@@ -244,6 +240,11 @@ shape = SubResource( 5 )
 
 [node name="Shape2" type="Sprite" parent="Shape"]
 material = SubResource( 7 )
-texture = ExtResource( 2 )
+texture = ExtResource( 1 )
+
+[node name="Audio" type="AudioStreamPlayer2D" parent="Shape"]
+position = Vector2( 1.16632, -1.16635 )
+stream = ExtResource( 4 )
+bus = "drum"
 
 [node name="Tween" type="Tween" parent="."]
