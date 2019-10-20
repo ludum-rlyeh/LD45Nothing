@@ -1,20 +1,14 @@
 extends Node2D
 
 var samples = [
-	"res://assets/sounds/kotoG.ogg",
-	"res://assets/sounds/kotoDontKnow.ogg",
-	"res://assets/sounds/kotoEm.ogg",
 	"res://assets/sounds/kotoD.ogg",
+	"res://assets/sounds/kotoC.ogg",
+	"res://assets/sounds/kotoBm.ogg",
+	"res://assets/sounds/kotoAm.ogg",
+	"res://assets/sounds/kotoG.ogg",
+	"res://assets/sounds/kotoEm.ogg"
 ]
 
-var pitches = [
-	2.0, # perfect octave
-	1.77, # minor seventh
-	1.5, # perfect fifth
-	1.33, # perfect four
-	1.2,  # minor third
-	1.0, # same note
-]
 
 var SPEED = 0.5
 var OLD_POINT
@@ -39,7 +33,7 @@ func build(var points, var material):
 	self.size = rect.size
 	
 	# set ramdom sound 
-	var id = round((size.x * size.y) / 20000)
+	var id = round((size.x * size.y) / 30000)
 	if id >= samples.size() :
 		id = samples.size() - 1
 	$Audio.stream = load(samples[id])

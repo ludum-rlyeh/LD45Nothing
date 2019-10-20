@@ -1,10 +1,12 @@
 extends Node2D
 
 var samples = [
-	"res://assets/sounds/guitarG.ogg",
-	"res://assets/sounds/guitarEm.ogg",
-	"res://assets/sounds/guitarDontKnow.ogg",
-	"res://assets/sounds/guitarD.ogg",
+	"res://assets/sounds/shamisenD.ogg",
+	"res://assets/sounds/shamisenC.ogg",
+	"res://assets/sounds/shamisenBm.ogg",
+	"res://assets/sounds/shamisenAm.ogg",
+	"res://assets/sounds/shamisenG.ogg",
+	"res://assets/sounds/shamisenEm.ogg"
 ]
 
 var SPEED = 0.5

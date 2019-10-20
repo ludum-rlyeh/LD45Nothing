@@ -4,10 +4,12 @@ var deformation_coefs = []
 var normals = []
 
 var samples = [
-	"res://assets/sounds/shamisenG.ogg",
-	"res://assets/sounds/shamisenEm.ogg",
-	"res://assets/sounds/shamisenDontKnow.ogg",
-	"res://assets/sounds/shamisenD.ogg"
+	"res://assets/sounds/guitarD.ogg",
+	"res://assets/sounds/guitarC.ogg",
+	"res://assets/sounds/guitarBm.ogg",
+	"res://assets/sounds/guitarAm.ogg",
+	"res://assets/sounds/guitarG.ogg",
+	"res://assets/sounds/guitarEm.ogg"
 ]
 
 var SPEED = 0.5
