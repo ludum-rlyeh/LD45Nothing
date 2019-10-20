@@ -23,6 +23,13 @@ config/icon="res://icon.png"
 
 Utils="*res://scripts/Utils.gd"
 
+[importer_defaults]
+
+ogg_vorbis={
+"loop": false,
+"loop_offset": 0
+}
+
 [input]
 
 draw={
