@@ -6,9 +6,6 @@
 [node name="Square" index="0" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
-[node name="Audio" parent="." index="0"]
-stream = null
-
 [node name="Shape" parent="." index="2"]
 points = PoolVector2Array( 1182, 432 )
 default_color = Color( 0, 0, 0, 0.560784 )

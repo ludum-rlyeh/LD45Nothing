@@ -7,6 +7,15 @@ var samples = [
 	"res://assets/sounds/kotoD.ogg",
 ]
 
+var pitches = [
+	2.0, # perfect octave
+	1.77, # minor seventh
+	1.5, # perfect fifth
+	1.33, # perfect four
+	1.2,  # minor third
+	1.0, # same note
+]
+
 var SPEED = 0.5
 var OLD_POINT
 var TIME = 0
