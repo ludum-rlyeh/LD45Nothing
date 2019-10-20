@@ -1,12 +1,22 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=12 format=2]
 
-[ext_resource path="res://assets/shape/round.png" type="Texture" id=1]
-[ext_resource path="res://scripts/especes/point.gd" type="Script" id=2]
-[ext_resource path="res://particles/trainee_encre.tscn" type="PackedScene" id=3]
-[ext_resource path="res://assets/sounds/drum01.ogg" type="AudioStream" id=4]
+[ext_resource path="res://assets/sounds/drum01.ogg" type="AudioStream" id=1]
+[ext_resource path="res://assets/shape/round.png" type="Texture" id=2]
+[ext_resource path="res://scripts/especes/point.gd" type="Script" id=3]
+[ext_resource path="res://particles/trainee_encre.tscn" type="PackedScene" id=4]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
+
+var samples = [
+	\"res://assets/sounds/drum01.ogg\",
+	\"res://assets/sounds/drum02.ogg\",
+	\"res://assets/sounds/drum03.ogg\",
+	\"res://assets/sounds/drum04.ogg\",
+	\"res://assets/sounds/drum05.ogg\",
+	\"res://assets/sounds/drum06.ogg\",
+	\"res://assets/sounds/drum07.ogg\"
+]
 
 var MASK_RADIUS_INIT = 0.1
 var MASK_RADIUS_FINAL = 1.0
@@ -14,8 +24,30 @@ var MASK_GROW_TIMER = 3.0
 var ERASE_TIMER = 1.0
 var mask_radius = MASK_RADIUS_INIT
 
+var _time_pulse_audio : float
+var _scale_pulse_audio_init : Vector2
+var _scale_pulse_audio_final : Vector2
+var SCALE_PULSE_AUDIO_OFFSET = Vector2(1.0,1.0)
+var TIME_PULSE_AUDIO_SCALE = 1.0/6.0
+
+var shape_sound
+
 func _ready():
+	
+	shape_sound = $Shape/Shape2
+	
+	_scale_pulse_audio_init = shape_sound.scale
+	_scale_pulse_audio_final = _scale_pulse_audio_init + SCALE_PULSE_AUDIO_OFFSET
+	
+	var sample = samples[randi() % samples.size()]
+	$Audio.stream = load(sample)
+	
 	$Shape.connect(\"die_sig\", self, \"_on_die\")
+	$Audio.connect(\"finished\", self, \"_restart_audio\")
+	
+	_time_pulse_audio = $Audio.stream.get_length() * TIME_PULSE_AUDIO_SCALE
+	_pulse_sound()
+	
 	
 func build(var points, var material):
 	var box = Utils.getBBox(points)
@@ -26,7 +58,19 @@ func _on_die():
 	call_deferred(\"die\")
 
 func die():
-	self.queue_free()"
+	self.queue_free()
+	
+func _pulse_sound():
+	shape_sound.show()
+	$Tween.interpolate_property(shape_sound, \"scale\", _scale_pulse_audio_init, _scale_pulse_audio_final, _time_pulse_audio, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	$Tween.interpolate_property(shape_sound, \"modulate\", Color.white, Color(255, 255, 255, 0), _time_pulse_audio, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	$Tween.start()
+	$Audio.play()
+	
+func _restart_audio():
+	$Tween.stop_all()
+	_pulse_sound()
+	"
 
 [sub_resource type="Shader" id=2]
 code = "shader_type canvas_item;
@@ -100,24 +144,91 @@ radius = 500.0
 
 [sub_resource type="CircleShape2D" id=5]
 
+[sub_resource type="Shader" id=6]
+code = "shader_type canvas_item;
+
+uniform float u_time_offset;
+uniform float transparency;
+
+vec2 random2(vec2 st){
+    st = vec2( dot(st,vec2(127.1,311.7)),
+              dot(st,vec2(269.5,183.3)) );
+    return -1.0 + 2.0*fract(sin(st)*43758.5453123);
+}
+
+// Value Noise by Inigo Quilez - iq/2013
+// https://www.shadertoy.com/view/lsf3WH
+float noise(vec2 st) {
+    vec2 i = floor(st);
+    vec2 f = fract(st);
+
+    vec2 u = f*f*(3.0-2.0*f);
+
+    return mix( mix( dot( random2(i + vec2(0.0,0.0) ), f - vec2(0.0,0.0) ),
+                     dot( random2(i + vec2(1.0,0.0) ), f - vec2(1.0,0.0) ), u.x),
+                mix( dot( random2(i + vec2(0.0,1.0) ), f - vec2(0.0,1.0) ),
+                     dot( random2(i + vec2(1.0,1.0) ), f - vec2(1.0,1.0) ), u.x), u.y);
+}
+
+float shape(vec2 st, float radius, float time) {
+	// to center coordinates UV
+	st = vec2(0.5)-st;
+    float r = length(st)*2.0;
+    float a = atan(st.y,st.x);
+    float m = abs(mod(a+time*2.,3.14*2.)-3.14)/3.6;
+    float f = radius;
+	
+    m += noise(st+time*(0.3+u_time_offset))*0.5;
+    f += sin(a*1.)*noise(st+time*(.2+u_time_offset))*.4;
+    f += (sin(a*2.)*.5*pow(m,2.));
+    return 1.-smoothstep(f,f+0.01,r);
+}
+
+float shapeBorder(vec2 st, float radius, float time) {
+    return shape(st,radius, time) - shape(st,radius-0.08, time);
+}
+
+void fragment() {
+	vec2 st = UV;
+	
+	vec3 color = vec3(1.0) * shapeBorder(st,0.8, TIME);
+	
+	if(color.x < 1.0)
+	{
+		COLOR = vec4(1,1,1,0);
+	}
+	else
+	{
+		COLOR = vec4( 1.-color, transparency );
+		
+	}
+
+}
+"
+
+[sub_resource type="ShaderMaterial" id=7]
+shader = SubResource( 6 )
+shader_param/u_time_offset = null
+shader_param/transparency = 1.0
+
 [node name="Node2D" type="Node2D"]
 script = SubResource( 1 )
+
+[node name="Audio" type="AudioStreamPlayer2D" parent="."]
+position = Vector2( -0.816424, 0.816445 )
+scale = Vector2( 0.3, 0.3 )
+stream = ExtResource( 1 )
+bus = "drum"
 
 [node name="Shape" type="Sprite" parent="."]
 material = SubResource( 3 )
 position = Vector2( -1.16632, 1.16635 )
 scale = Vector2( 0.3, 0.3 )
-texture = ExtResource( 1 )
-script = ExtResource( 2 )
+texture = ExtResource( 2 )
+script = ExtResource( 3 )
 
-[node name="Particles2D" parent="Shape" instance=ExtResource( 3 )]
+[node name="Particles2D" parent="Shape" instance=ExtResource( 4 )]
 emitting = true
-
-[node name="Audio" type="AudioStreamPlayer2D" parent="Shape"]
-position = Vector2( 1.16632, -1.16635 )
-stream = ExtResource( 4 )
-autoplay = true
-bus = "drum"
 
 [node name="AttractionArea" type="Area2D" parent="Shape"]
 monitorable = false
@@ -130,5 +241,9 @@ monitoring = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Shape/PointArea"]
 shape = SubResource( 5 )
+
+[node name="Shape2" type="Sprite" parent="Shape"]
+material = SubResource( 7 )
+texture = ExtResource( 2 )
 
 [node name="Tween" type="Tween" parent="."]

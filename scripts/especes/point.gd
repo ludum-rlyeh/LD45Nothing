@@ -1,15 +1,5 @@
 extends Sprite
 
-var samples = [
-	"res://assets/sounds/drum01.ogg",
-	"res://assets/sounds/drum02.ogg",
-	"res://assets/sounds/drum03.ogg",
-	"res://assets/sounds/drum04.ogg",
-	"res://assets/sounds/drum05.ogg",
-	"res://assets/sounds/drum06.ogg",
-	"res://assets/sounds/drum07.ogg"
-]
-
 signal die_sig
 
 var MAX_VELOCITY
@@ -42,21 +32,14 @@ func mouvement_6(delta) :
 func _ready():
 	randomize()
 	self.add_to_group("points")
-	
-	var sample = samples[randi() % samples.size()]
-	$Audio.stream = load(sample)
-	
 	self.velocity = Vector2(rand_range(-1.0, 1.0), rand_range(-1.0, 1.0))
 	
-	
-
 # warning-ignore:unused_argument
 func build(var points) :
 	OLD_POINT = self.position - Vector2(randf() * pow(-1,randi()%2),randf() * pow(-1,randi()%2)).normalized()
 	MAX_VELOCITY = rand_range(50.0, 80.0)
 	
 	set_material(get_material().duplicate())
-	#get_material().shader = get_material().shader.duplicate()
 	
 	var offset_time = rand_range(-1.0, 1.0)
 	get_material().set_shader_param("u_time_offset", offset_time)
