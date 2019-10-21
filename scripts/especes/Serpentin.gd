@@ -26,6 +26,15 @@ var VIEWPORT_SIZE
 var PathFollower = preload("res://scripts/PathFollower.gd")
 var _path_follower
 
+var _time_pulse_audio : float
+var _scale_pulse_audio_init : Vector2
+var _scale_pulse_audio_final : Vector2
+var SCALE_PULSE_AUDIO_OFFSET = Vector2(1.0,1.0)
+var TIME_PULSE_AUDIO_SCALE = 1.0/12.0
+
+var _pulse_shape_bary
+var _shape_sound
+
 func mouv():
 	POINTS.append(POINTS[-1]+Vector2(15.0,0))
 	POINTS.remove(0)
@@ -109,38 +118,52 @@ func get_size(var points) :
 	return size
 
 func build(points, material) :
-	
 	self.set_points(points)
+	_shape_sound = $PulseShape
+	_scale_pulse_audio_init = _shape_sound.scale
+	_scale_pulse_audio_final = _scale_pulse_audio_init + SCALE_PULSE_AUDIO_OFFSET
+	
 	_path_follower = PathFollower.new(self)
 	
 	$Particles2D.set_position(points[0])
 	
+	VIEWPORT_SIZE = Utils.Viewport_dimensions()
 	
+	_build_pulse_shape()
+	_build_sound()
+	
+	set_material(material.duplicate())
+	
+func _build_pulse_shape():
+	var circle = Utils.create_circle(5, 20)
+	_shape_sound.set_points(circle)
+	self.set_points(points)
+	
+func _build_sound():
 	# set audio
 	var id = round(get_size(points) / 250)
 	if id >= pitches.size() :
 		id = pitches.size() - 1
 	$AudioNode/Audio.pitch_scale = pitches[id]
-	$AudioNode.position = self.points[-1]
-	
-	VIEWPORT_SIZE = Utils.Viewport_dimensions()
-	
-	set_material(material.duplicate())
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
 	
+	$AudioNode/Audio.connect("finished", self, "_restart_audio")
 	
+	_time_pulse_audio = $AudioNode/Audio.stream.get_length() * TIME_PULSE_AUDIO_SCALE
+	_pulse_sound()
 	
-#	var points = PoolVector2Array([Vector2(100.0,100.0), Vector2(130.0,100.0), Vector2(145.0,100.0), Vector2(160.0,100.0), Vector2(175.0,100.0), Vector2(190.0,100.0)])
-#	var array = []
-#	for i in range(0,200) :
-#		array.append(Vector2(i*1.0,300.0))
-#	points = PoolVector2Array(array)
-#	self.set_points(points)
-#
-#	build(points)
+func _pulse_sound():
+	$PulseTween.interpolate_property(_shape_sound, "scale", _scale_pulse_audio_init, _scale_pulse_audio_final, _time_pulse_audio, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	$PulseTween.interpolate_property(_shape_sound, "modulate", Color.white, Color(255, 255, 255, 0), _time_pulse_audio, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	$PulseTween.start()
+	$AudioNode/Audio.play()
+
+func _restart_audio():
+	$PulseTween.stop_all()
+	_pulse_sound()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -173,3 +196,10 @@ func _process(delta):
 	$Area2D.position = self.points[-1]
 	
 	$Particles2D.set_position(points[0])
+	
+	var index = get_point_count()-get_point_count()/8.0
+	if index >= get_point_count() || index < 0:
+		index = get_point_count()-1
+#	print(index)
+#	print(get_point_count())
+	_shape_sound.position = get_point_position(index)

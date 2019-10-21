@@ -155,3 +155,10 @@ lifetime = 3.0
 local_coords = false
 process_material = SubResource( 8 )
 texture = SubResource( 9 )
+
+[node name="PulseShape" type="Line2D" parent="Shape"]
+width = 2.0
+default_color = Color( 0, 0, 0, 1 )
+texture_mode = -1039796688
+
+[node name="PulseTween" type="Tween" parent="Shape"]

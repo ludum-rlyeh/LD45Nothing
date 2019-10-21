@@ -132,11 +132,16 @@ texture_mode = 2
 joint_mode = 2
 script = ExtResource( 2 )
 
+[node name="PulseShape" type="Line2D" parent="Line2D"]
+width = 2.0
+default_color = Color( 0, 0, 0, 1 )
+texture_mode = 2
+joint_mode = 2
+
 [node name="AudioNode" type="Node2D" parent="Line2D"]
 
 [node name="Audio" type="AudioStreamPlayer2D" parent="Line2D/AudioNode"]
 stream = ExtResource( 3 )
-autoplay = true
 bus = "shakuhachi"
 
 [node name="Particles2D" type="Particles2D" parent="Line2D"]
@@ -152,3 +157,5 @@ monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Line2D/Area2D"]
 shape = SubResource( 9 )
+
+[node name="PulseTween" type="Tween" parent="Line2D"]

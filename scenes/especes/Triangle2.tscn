@@ -117,9 +117,6 @@ color_ramp = SubResource( 4 )
 [node name="Triangle" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
-[node name="Audio" parent="." index="0"]
-stream = null
-
 [node name="Shape" parent="." index="2"]
 material = SubResource( 2 )
 

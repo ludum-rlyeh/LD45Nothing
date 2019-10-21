@@ -22,23 +22,46 @@ var NORMAL
 var ROTATION = 0
 var BASE
 
+var _time_pulse_audio : float
+var _scale_pulse_audio_init : Vector2
+var _scale_pulse_audio_final : Vector2
+var SCALE_PULSE_AUDIO_OFFSET = Vector2(1.0,1.0)
+var TIME_PULSE_AUDIO_SCALE = 1.0/12.0
+var _pulse_shape_bary
+var _shape_sound
+
 func _ready():
 	randomize()
 	self.add_to_group("triangle")
 	
+	$Audio.connect("finished", self, "_restart_audio")
+	
+	_time_pulse_audio = $Audio.stream.get_length() * TIME_PULSE_AUDIO_SCALE
+	_pulse_sound()
 	
 #	build([Vector2(100,100), Vector2(150,150), Vector2(200,200), Vector2(150,200), Vector2(100,200), Vector2(100,150), Vector2(100,100)], 300.0)
 
+func _pulse_sound():
+	$PulseTween.interpolate_method(self, "_scale_pulse_shape", _scale_pulse_audio_init, _scale_pulse_audio_final, _time_pulse_audio, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	$PulseTween.interpolate_property(_shape_sound, "modulate", Color.white, Color(255, 255, 255, 0), _time_pulse_audio, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	$PulseTween.start()
+	$Audio.play()
+
+func _scale_pulse_shape(scale):
+	_shape_sound.set_scale(scale)
+
+func _restart_audio():
+	$PulseTween.stop_all()
+	_pulse_sound()
+
 func build(var points, var material):
+	
+	_shape_sound = $Shape/PulseShape
+	_scale_pulse_audio_init = _shape_sound.scale
+	_scale_pulse_audio_final = _scale_pulse_audio_init + SCALE_PULSE_AUDIO_OFFSET
 	
 	var rect = Utils.getBBox(points)
 	self.size = rect.size
-	
-	# set ramdom sound 
-	var id = round((size.x * size.y) / 50000)
-	if id >= samples.size() :
-		id = samples.size() - 1
-	$Audio.stream = load(samples[id])
 	
 	self.position = rect.position
 	
@@ -46,20 +69,7 @@ func build(var points, var material):
 	
 	var indice_edge_min = 0
 	
-#	var min_length = (edges[0][0]-edges[0][1]).length()
-#	var min_edge = edges[0]
-#	
-#	print(edges)
-#	for i in range(0,edges.size()) :
-#		var e = edges[i]
-#		print("edge ", e)
-#		if (e[0]-e[1]).length() < min_length :
-#			min_length = (e[0]-e[1]).length()
-#			min_edge = e
-#			indice_edge_min = i
-	
 	var base = edges[0][1] - edges[0][0]
-#	var base = min_edge[1] - min_edge[0]
 	BASE = base/2.0 + edges[0][0]
 	self.position = BASE
 	
@@ -69,45 +79,43 @@ func build(var points, var material):
 	if (bary-BASE).normalized().dot(NORMAL) < 0:
 		NORMAL = -NORMAL
 	
-	#other NORMAL
-#	var dist_max = 0.0
-#	var vertex_far = edges[1][0]
-#	for e in edges :
-#		if self.position.distance_to(e[0]) > dist_max :
-#			vertex_far = e[0]
-#			dist_max = self.position.distance_to(e[0])
-#		if self.position.distance_to(e[1]) > dist_max :
-#			vertex_far = e[1]
-#			dist_max = self.position.distance_to(e[1])
-#	NORMAL = (vertex_far - self.position)
-			
-			
-#	if indice_edge_min == 0 :
-#		if base.angle_to(edges[1][1] - edges[1][0]) < 0.0 :
-#			NORMAL *= -1.0
-#	else :
-#		if base.angle_to(edges[0][1] - edges[0][0]) < 0.0 :
-#			NORMAL *= -1.0		
-	
 	var n_points = PoolVector2Array()
 	for point in points:
 		n_points.append(point - self.position)
 	
 	$Shape.set_points(n_points)
 	
-#	var rot = Vector2.RIGHT.angle_to(-NORMAL)
+	ROTATION = randf() * PI / 4.0
 	
+	_init_animation()
+	
+	_build_pulse_shape()
+	
+	_build_sound()
+	
+	$Particles2D.set_position(-NORMAL.normalized()*10)
+	$Shape.set_material(material.duplicate())
+
+func _init_animation():
 	scale_factor = Vector2(1,1) + Vector2(rand_range(-0.2,0.2), 0.0)
 	$Tween2.interpolate_method(self, "set_scale", Vector2(1,1), scale_factor, TIME_SCALE_ANIMATION, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
 	$Tween2.connect("tween_completed", self, "scale_animation_triangle")
 	$Tween2.start()
 	
-	ROTATION = randf() * PI / 4.0
+func _build_pulse_shape():
+	var pts = $Shape.points
+#	var box = Utils.getBBox(pts)
+#	var center = box.size/2.0
+#	pts = Utils.apply_translation(pts, - center)
+	_shape_sound.set_points(pts)
+#	_shape_sound.position += center
 	
-	$Particles2D.set_position(-NORMAL.normalized()*10)
-	
-	$Shape.set_material(material.duplicate())
-#	$Shape.get_material().set_shader_param("l_total", l_total)
+func _build_sound():
+	# set ramdom sound 
+	var id = round((size.x * size.y) / 50000)
+	if id >= samples.size() :
+		id = samples.size() - 1
+	$Audio.stream = load(samples[id])
 
 func _process(delta):
 	#mouvement_6(delta)

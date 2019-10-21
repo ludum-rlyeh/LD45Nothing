@@ -94,7 +94,6 @@ func _build_pulse_shape():
 	var box = Utils.getBBox(pts)
 	var center = box.size/2.0
 	
-	pts.append(pts[0])
 	pts = Utils.apply_translation(pts, - center)
 	_shape_sound.set_points(pts)
 	

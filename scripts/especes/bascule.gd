@@ -40,19 +40,39 @@ var OFFSET
 var INIT_POINTS
 var DELAYED 
 
+var _time_pulse_audio : float
+var _scale_pulse_audio_init : Vector2
+var _scale_pulse_audio_final : Vector2
+var SCALE_PULSE_AUDIO_OFFSET = Vector2(1.0,1.0)
+var TIME_PULSE_AUDIO_SCALE = 1.0/2.0
+
+var _pulse_shape_bary
+var _shape_sound
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
 	var sample = samples[randi() % samples.size()]
 	$Audio.stream = load(sample)
 	
+	_time_pulse_audio = $Audio.stream.get_length() * TIME_PULSE_AUDIO_SCALE
+	_pulse_sound()
+	
+func _pulse_sound():
+	$PulseTween.interpolate_property(_shape_sound, "scale", _scale_pulse_audio_init, _scale_pulse_audio_final, _time_pulse_audio, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	$PulseTween.interpolate_property(_shape_sound, "modulate", Color.white, Color(255, 255, 255, 0), _time_pulse_audio, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	$PulseTween.start()
+	$Audio.play()
 	
 func _process(delta):
 	move(delta)
 
-		
-
 func build(shape, material):
+	
+	_shape_sound = $PulseShape
+	_scale_pulse_audio_init = _shape_sound.scale
+	_scale_pulse_audio_final = _scale_pulse_audio_init + SCALE_PULSE_AUDIO_OFFSET
+	
 	var offset = shape[0]
 	OFFSET = offset
 	var pts2 = []
@@ -73,13 +93,21 @@ func build(shape, material):
 	
 	set_material(material.duplicate())
 	
+	_build_sound()
+	
+	_build_pulse_shape()
+	
+func _build_pulse_shape():
+	var circle = Utils.create_circle(5, 20)
+	_shape_sound.set_points(circle)
+	
+func _build_sound():
 	# set audio
 	var id = round(get_size(points) / 250)
 	if id >= pitches.size() :
 		id = pitches.size() - 1
 	$Audio.pitch_scale = pitches[id]
 	$Audio.play()
-#	get_material().set_shader_param("l_total", l_total)
 	
 func move(delta):
 	var angleInDeg = direction * SPEED_ANGLE * delta
@@ -91,13 +119,21 @@ func move(delta):
 		total_angle = direction * new_angle()
 		flip = !flip
 		cumulate_angle = 0
-		$Audio.play()
-#		self.points = INIT_POINTS
+		$PulseTween.stop_all()
+		_pulse_sound()
 		if !flip:
 			$Particles2D.set_position(Vector2(0,0))
+			var index = int(get_point_count()/6.0)
+			if index >= get_point_count() || index < 0:
+				index = 0
+			_shape_sound.position = get_point_position(index)
 		else:
 			var t = init_vec_line
 			$Particles2D.set_position(t)
+			var index = get_point_count()-get_point_count()/8.0
+			if index >= get_point_count() || index < 0:
+				index = get_point_count()-1
+			_shape_sound.position = get_point_position(index)
 	else:
 		cumulate_angle += angleInDeg
 		cumulate_angleRad = deg2rad(cumulate_angle)
@@ -148,7 +184,6 @@ func move(delta):
 	
 	var transformed = get_transform()[2]
 	var new_base = transformed + OFFSET
-#	print(transformed, " ", OFFSET, " ", OFFSET + transformed)
 	if (new_base[0] < -VIEWPORT_SIZE[0]/3.0) :
 		translate(Vector2(VIEWPORT_SIZE[0] * (1.0+1.0/3.0),0.0))
 	if (new_base[0] > VIEWPORT_SIZE[0] * (1.0+1.0/3.0)) :

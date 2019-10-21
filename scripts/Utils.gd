@@ -3,6 +3,16 @@ extends Node
 var THRESHOLD_ANGLE_SAME_SLOPE = 0.8
 var DIST_SAME_POINT = 10
 
+func create_circle(radius : int, resolution : int):
+	var pts = []
+	var step = 2*PI / float(resolution)
+	var k = 0
+	while k < 2*PI :
+		pts.append(Vector2(cos(k), sin(k)) * radius)
+		k += step
+	pts.append(Vector2(cos(0), sin(0)) * radius)
+	return pts
+
 func reverse_index(i, size):
 	return size - i - 1
 

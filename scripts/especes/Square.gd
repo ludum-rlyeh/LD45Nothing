@@ -33,18 +33,32 @@ func _ready():
 	randomize()
 	self.add_to_group("square")
 	
+	$Audio.connect("finished", self, "_restart_audio")
 	
+	_time_pulse_audio = $Audio.stream.get_length() * TIME_PULSE_AUDIO_SCALE
+	_pulse_sound()
+	
+func _pulse_sound():
+	$PulseTween.interpolate_method(self, "_scale_pulse_shape", _scale_pulse_audio_init, _scale_pulse_audio_final, _time_pulse_audio, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	$PulseTween.interpolate_property(_shape_sound, "modulate", Color.white, Color(255, 255, 255, 0), _time_pulse_audio, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	$PulseTween.start()
+	$Audio.play()
+
+func _scale_pulse_shape(scale):
+	_shape_sound.set_scale(scale)
+
+func _restart_audio():
+	$PulseTween.stop_all()
+	_pulse_sound()
 
 func build(var points, var material):
 	
+	_shape_sound = $Shape/PulseShape
+	_scale_pulse_audio_init = _shape_sound.scale
+	_scale_pulse_audio_final = _scale_pulse_audio_init + SCALE_PULSE_AUDIO_OFFSET
+	
 	var rect = Utils.getBBox(points)
 	self.size = rect.size
-	
-	# set ramdom sound 
-	var id = round((size.x * size.y) / 50000)
-	if id >= samples.size() :
-		id = samples.size() - 1
-	$Audio.stream = load(samples[id])
 	
 #	self.position = rect.position
 	self.position = rect.position + rect.size / 2.0 
@@ -54,33 +68,35 @@ func build(var points, var material):
 	for point in points:
 		n_points.append(point - self.position)
 	
-#	$Shape.set_polygon(n_points)
 	$Shape.set_points(n_points)
 	
+	ROTATION = pow(-1,randi()%2) * PI/2.0 * randf()
 	
+	_init_animation()
 	
+	_build_pulse_shape()
+	
+	_build_sound()
+	
+	$Shape.set_material(material.duplicate())
+	
+func _init_animation():
 	var random = rand_range(-0.2,0.2)
 	scale_factor = Vector2(1,1) + Vector2(random, random)
 	$Tween2.interpolate_method(self, "set_scale", Vector2(1,1), scale_factor, TIME_SCALE_ANIMATION, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
 	$Tween2.connect("tween_completed", self, "scale_animation_square")
 	$Tween2.start()
 	
-	ROTATION = pow(-1,randi()%2) * PI/2.0 * randf()
-	
-	$Shape.set_material(material.duplicate())
-	
-	_build_pulse_shape()
-	
 func _build_pulse_shape():
 	var pts = $Shape.points
-	var box = Utils.getBBox(pts)
-	var center = box.size/2.0
-	
-	pts.append(pts[0])
-	pts = Utils.apply_translation(pts, - center)
 	_shape_sound.set_points(pts)
 	
-	_shape_sound.position += center
+func _build_sound():
+	# set random sound 
+	var id = round((size.x * size.y) / 50000)
+	if id >= samples.size() :
+		id = samples.size() - 1
+	$Audio.stream = load(samples[id])
 
 func _process(delta):
 	mouvement_6(delta)
