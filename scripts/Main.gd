@@ -30,7 +30,6 @@ func _on_new_boid(var boid_type, var points, var material):
 	
 func create_boid(var boid_type, var points, var material):
 	var boid = null
-	print(boid_type)
 	match boid_type :
 		"point":
 			boid = Point.instance()

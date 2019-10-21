@@ -105,7 +105,7 @@ texture_mode = 2
 
 [node name="PulseShape" type="Line2D" parent="Shape"]
 points = PoolVector2Array( 1671.09, 324.183 )
-width = 5.0
+width = 2.0
 default_color = Color( 0, 0, 0, 1 )
 texture_mode = 1077936128
 
