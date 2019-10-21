@@ -43,7 +43,10 @@ func get_barycenter_from_edges(edges):
 	bary /= edges.size()
 	return bary
 		
-	
+func apply_translation(tab : Array, var T):
+	for i in tab.size():
+		tab[i] += T
+	return tab
 
 func getBBox(points):
 	var rect = Rect2(points[0], Vector2(0.0,0.0))

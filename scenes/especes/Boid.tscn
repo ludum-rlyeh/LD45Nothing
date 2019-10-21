@@ -92,7 +92,6 @@ shader_param/l_total = null
 script = ExtResource( 1 )
 
 [node name="Audio" type="AudioStreamPlayer2D" parent="."]
-autoplay = true
 bus = "chords"
 
 [node name="Tween" type="Tween" parent="."]
@@ -103,3 +102,11 @@ width = 20.0
 default_color = Color( 0, 0, 0, 1 )
 texture = ExtResource( 2 )
 texture_mode = 2
+
+[node name="PulseShape" type="Line2D" parent="Shape"]
+points = PoolVector2Array( 1671.09, 324.183 )
+width = 5.0
+default_color = Color( 0, 0, 0, 1 )
+texture_mode = 1077936128
+
+[node name="PulseTween" type="Tween" parent="."]

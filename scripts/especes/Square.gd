@@ -21,6 +21,15 @@ var TIME_SCALE_ANIMATION = 1.0
 
 var ROTATION
 
+var _time_pulse_audio : float
+var _scale_pulse_audio_init : Vector2
+var _scale_pulse_audio_final : Vector2
+var SCALE_PULSE_AUDIO_OFFSET = Vector2(1.0,1.0)
+var TIME_PULSE_AUDIO_SCALE = 1.0/12.0
+var _pulse_shape_bary
+var _shape_sound
+
+
 func _ready():
 	randomize()
 	self.add_to_group("square")
@@ -59,8 +68,20 @@ func build(var points, var material):
 	
 	ROTATION = pow(-1,randi()%2) * PI/2.0 * randf()
 	
-#	$Shape.get_material().set_shader_param("l_total", l_total)
 	$Shape.set_material(material.duplicate())
+	
+	_build_pulse_shape()
+	
+func _build_pulse_shape():
+	var pts = $Shape.points
+	var box = Utils.getBBox(pts)
+	var center = box.size/2.0
+	
+	pts.append(pts[0])
+	pts = Utils.apply_translation(pts, - center)
+	_shape_sound.set_points(pts)
+	
+	_shape_sound.position += center
 
 func _process(delta):
 	mouvement_6(delta)
