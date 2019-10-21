@@ -4,12 +4,11 @@ var deformation_coefs = []
 var normals = []
 
 var samples = [
-	"res://assets/sounds/guitarD.ogg",
-	"res://assets/sounds/guitarC.ogg",
-	"res://assets/sounds/guitarBm.ogg",
-	"res://assets/sounds/guitarAm.ogg",
-	"res://assets/sounds/guitarG.ogg",
-	"res://assets/sounds/guitarEm.ogg"
+	"res://assets/sounds/shamisenD.ogg",
+	"res://assets/sounds/shamisenBm.ogg",
+	"res://assets/sounds/shamisenAm.ogg",
+	"res://assets/sounds/shamisenG.ogg",
+	"res://assets/sounds/shamisenEm.ogg"
 ]
 
 var SPEED = 0.5
@@ -63,7 +62,6 @@ func build(var points, var material):
 	var rect = Utils.getBBox(points)
 	size = rect.size
 	
-	
 	self.position = rect.position
 	OLD_POINT = self.position - Vector2(randf() * pow(-1,randi()%2),randf() * pow(-1,randi()%2)).normalized()
 	
@@ -104,7 +102,7 @@ func _build_pulse_shape():
 	
 func _build_sound():
 	# set random sound 
-	var id = round((size.x * size.y) / 20000)
+	var id = round((size.x * size.y) / 50000)
 	if id >= samples.size() :
 		id = samples.size() - 1
 	$Audio.stream = load(samples[id])

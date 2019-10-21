@@ -2,7 +2,6 @@ extends Node2D
 
 var samples = [
 	"res://assets/sounds/kotoD.ogg",
-	"res://assets/sounds/kotoC.ogg",
 	"res://assets/sounds/kotoBm.ogg",
 	"res://assets/sounds/kotoAm.ogg",
 	"res://assets/sounds/kotoG.ogg",
@@ -42,7 +41,7 @@ func build(var points, var material):
 	self.size = rect.size
 	
 	# set ramdom sound 
-	var id = round((size.x * size.y) / 30000)
+	var id = round((size.x * size.y) / 50000)
 	if id >= samples.size() :
 		id = samples.size() - 1
 	$Audio.stream = load(samples[id])
