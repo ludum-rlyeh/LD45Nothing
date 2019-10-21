@@ -7,16 +7,23 @@ var THRESHOLD_NEIGHBOURING = 50
 var PENCIL_SCENE = preload("res://scenes/Pencil.tscn")
 var _pencil = PENCIL_SCENE.instance()
 
+var pressed = false
+
 func _ready():
 	_pencil.connect("_new_shape_sig", self, "_on_new_shape") 
 	add_child(_pencil)
 	
 func _input(event):
-	if event is InputEventMouse:
-		if event.is_action_pressed("draw"):
+	if event is InputEventMouseButton:
+		if event.pressed:
+#    if event is InputEventMouse:
+#		if event.is_action_pressed("draw"):
 			_pencil.start_painting()
-		if Input.is_action_just_released("draw"):
+			pressed = true
+		if !event.pressed && pressed:
+#		if Input.is_action_just_released("draw"):
 			_pencil.stop_painting()
+			pressed = false
 
 func _on_new_shape():
 	var points = Utils.remove_duplicates(_pencil.points)
@@ -24,7 +31,7 @@ func _on_new_shape():
 	if shape.boid_type != "":
 		emit_signal("_new_boid_sig", shape.boid_type, shape.points, _pencil.material)
 
-func recognition(var points):	
+func recognition(var points):
 	var boid_type = "";
 	if points.size() > 0 :
 		if start_and_end_are_close(points, THRESHOLD_NEIGHBOURING) :
