@@ -1,7 +1,7 @@
 # Shuǐmòhuà
 
 According to the theme "Start with nothing", 
-we like to think that the gamefeel will be better 
+we like to think that the gamefell will be better 
 if the player has no information when s/he will start the
 game.
 
@@ -27,13 +27,13 @@ And to play our game, it's right [HERE](https://ludum-rlyeh.github.io/LD45Nothin
 
 HTML5 : https://ludum-rlyeh.github.io/LD45Nothing/LD45.html
 
-Windows : https://github.com/ludum-rlyeh/LD45Nothing/releases/tag/v0-ludum
+Release : https://github.com/ludum-rlyeh/LD45Nothing/releases/tag/v0-ludum
 
 ### Polished Version (v1)
 
 HTML5 : https://ludum-rlyeh.github.io/LD45Nothing/shuimohua.html
 
-Windows : https://github.com/ludum-rlyeh/LD45Nothing/releases/download/v1-polished
+Releases : https://github.com/ludum-rlyeh/LD45Nothing/releases/tag/v1-polished
 
 
 ## Information
