@@ -24,9 +24,8 @@ func _ready():
 	var sample = samples[randi() % samples.size()]
 	$Audio.stream = load(sample)
 
-func build(var points):
+func build(var points, var rect):
 	
-	var rect = Utils.getBBox(points)
 	self.size = rect.size
 	
 	self.position = rect.position

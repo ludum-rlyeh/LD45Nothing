@@ -23,12 +23,12 @@ func _input(event):
 	if event.is_action_pressed("ui_cancel") :
 		get_tree().quit()
 
-func _on_new_boid(var boid_type, var points, var material):
-	var boid = create_boid(boid_type, points, material)
+func _on_new_boid(var boid_type, var points, var rect, var material):
+	var boid = create_boid(boid_type, points, rect, material)
 	if boid:
 		add_boid_to_scene(boid)
 	
-func create_boid(var boid_type, var points, var material):
+func create_boid(var boid_type, var points, rect, var material):
 	var boid = null
 	match boid_type :
 		"point":
@@ -45,7 +45,7 @@ func create_boid(var boid_type, var points, var material):
 			boid = Serpentin.instance()
 			
 	if boid != null :
-		boid.build(points, material)
+		boid.build(points, rect, material)
 	return boid
 		
 func add_boid_to_scene(var boid):

@@ -51,8 +51,7 @@ func _ready():
 	_pulse_sound()
 	
 	
-func build(var points, var material):
-	var box = Utils.getBBox(points)
+func build(var points, var box, var material):
 	$Shape.position = box.position
 	$Shape.build(points)
 

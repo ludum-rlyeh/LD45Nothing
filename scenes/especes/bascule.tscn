@@ -12,7 +12,7 @@ script/source = "extends Node2D
 #	line.set_points([Vector2(50,200), Vector2(200,200)])
 #	build(line.points)
 
-func build(points, material):
+func build(points, rect, material):
 	$Shape.build(points, material)
 	
 	set_position(points[0])"

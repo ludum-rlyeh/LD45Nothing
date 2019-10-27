@@ -9,7 +9,7 @@
 resource_name = "Serpentin"
 script/source = "extends Node2D
 
-func build(var points, var material):
+func build(var points, var rect, var material):
 	$Line2D.build(points, material)
 "
 

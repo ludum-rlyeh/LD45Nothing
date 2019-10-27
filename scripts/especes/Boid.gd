@@ -53,13 +53,12 @@ func _restart_audio():
 	$PulseTween.stop_all()
 	_pulse_sound()
 
-func build(var points, var material):
+func build(var points, var rect, var material):
 	
 	_shape_sound = $Shape/PulseShape
 	_scale_pulse_audio_init = _shape_sound.scale
 	_scale_pulse_audio_final = _scale_pulse_audio_init + SCALE_PULSE_AUDIO_OFFSET
 	
-	var rect = Utils.getBBox(points)
 	size = rect.size
 	
 	self.position = rect.position

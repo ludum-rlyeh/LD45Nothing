@@ -2,7 +2,7 @@ extends Node2D
 
 signal _new_boid_sig # to emit with species and points
 
-var THRESHOLD_NEIGHBOURING = 50
+var THRESHOLD_NEIGHBOURING = 32
 
 var PENCIL_SCENE = preload("res://scenes/Pencil.tscn")
 var _pencil = PENCIL_SCENE.instance()
@@ -29,13 +29,16 @@ func _on_new_shape():
 	var points = Utils.remove_duplicates(_pencil.points)
 	var shape = recognition(points)
 	if shape.boid_type != "":
-		emit_signal("_new_boid_sig", shape.boid_type, shape.points, _pencil.material)
+		emit_signal("_new_boid_sig", shape.boid_type, shape.points, shape.rect, _pencil.material)
 
 func recognition(var points):
-	var boid_type = "";
+	var boid_type = ""
+	var rect = null;
 	if points.size() > 0 :
+		rect = Utils.getBBox(points)
+		
 		if start_and_end_are_close(points, THRESHOLD_NEIGHBOURING) :
-			if not_a_lot_of_points(points, 10) :
+			if rect.size.x <= THRESHOLD_NEIGHBOURING and rect.size.y <= THRESHOLD_NEIGHBOURING :
 				boid_type = "point";
 			elif has_edges(points, 3)  :
 				boid_type = "triangle"
@@ -49,7 +52,7 @@ func recognition(var points):
 			else :
 				boid_type = "snake";
 		
-	return {"boid_type" : boid_type, "points" : points}
+	return {"boid_type" : boid_type, "points" : points, "rect": rect}
 		
 	
 
@@ -59,11 +62,6 @@ func start_and_end_are_close(var points, var max_dist) :
 	if start.distance_to(end) <= max_dist :
 		return true
 	
-	return false
-
-func not_a_lot_of_points(var points, var max_points):
-	if points.size() <= max_points :
-		return true
 	return false
 
 # distance from normal
